@@ -1,6 +1,7 @@
-still_animation = {}
+StillAnimation = {}
+StillAnimation.mt = {__index=StillAnimation}
 
-function still_animation.new(img_name, frame_count, frame_time, x, y, pivotX, pivotY)
+function StillAnimation.new(img_name, frame_count, frame_time, x, y, pivotX, pivotY)
     -- Default value settings
     frame_count = frame_count or 1
     frame_time = frame_time or 1
@@ -19,7 +20,7 @@ function still_animation.new(img_name, frame_count, frame_time, x, y, pivotX, pi
     end
 
     -- Return animation table
-    return {
+    local instance = {
         img = image,
         frames = frames,
         frame_count = frame_count,
@@ -33,25 +34,26 @@ function still_animation.new(img_name, frame_count, frame_time, x, y, pivotX, pi
         pivotY = pivotY,
         width = frame_width,
         height = frame_height,
-
-        update = function(self, dt)
-            self.frame_timer = self.frame_timer + dt
-            if self.frame_timer > self.frame_time then
-                self.frame_timer = 0
-                self.current_frame = self.current_frame + 1
-                if self.current_frame > self.frame_count then self.current_frame = 1 end
-            end
-        end,
-
-        draw = function(self)
-            love.graphics.draw(self.img, self.frames[self.current_frame],
-                               math.floor(self.x - self.width*self.pivotX),
-                               math.floor(self.y - self.height*self.pivotY))
-        end,
-
-        restartAnimation = function(self)
-            self.current_frame = 1
-            self.frame_timer = 0
-        end
     }
+    return setmetatable(instance, StillAnimation.mt)
+end
+
+function StillAnimation:update(dt)
+    self.frame_timer = self.frame_timer + dt
+    if self.frame_timer > self.frame_time then
+        self.frame_timer = 0
+        self.current_frame = self.current_frame + 1
+        if self.current_frame > self.frame_count then self.current_frame = 1 end
+    end
+end
+
+function StillAnimation:draw()
+    love.graphics.draw(self.img, self.frames[self.current_frame],
+                        math.floor(self.x - self.width*self.pivotX),
+                        math.floor(self.y - self.height*self.pivotY))
+end
+
+function StillAnimation:reset()
+    self.current_frame = 1
+    self.frame_timer = 0
 end

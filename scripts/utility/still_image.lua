@@ -1,13 +1,18 @@
-still_image = {}
+StillImage = {}
+StillImage.mt = {__index=StillImage}
 
-function still_image.new(img_name, x, y, pivotX, pivotY)
+function StillImage.new(img_name, x, y, pivotX, pivotY)
+    -- Default parameters
     x = x or 0.0
     y = y or 0.0
     pivotX = pivotX or 0.0
     pivotY = pivotY or 0.0
 
+    -- Load image
     local image = love.graphics.newImage('assets/' .. img_name)
-    return {
+
+    -- Make instance
+    local instance = {
         img = image,
         x = x,
         y = y,
@@ -15,9 +20,10 @@ function still_image.new(img_name, x, y, pivotX, pivotY)
         pivotY = pivotY,
         width = image:getWidth(),
         height = image:getHeight(),
-
-        draw = function(self)
-            love.graphics.draw(self.img, self.x - self.width*self.pivotX, self.y - self.height*self.pivotY)
-        end
     }
+    return setmetatable(instance, StillImage.mt)
+end
+
+function StillImage:draw()
+    love.graphics.draw(self.img, self.x - self.width*self.pivotX, self.y - self.height*self.pivotY)
 end
