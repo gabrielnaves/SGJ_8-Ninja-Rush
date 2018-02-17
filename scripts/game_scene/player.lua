@@ -19,6 +19,12 @@ function Player.new()
         StillAnimation.new("ninja/ninja_moving_left.png", 6, 0.1, Screen.width/2, Screen.height/2, 0.5, 1),
         StillAnimation.new("ninja/ninja_moving_right.png", 6, 0.1, Screen.width/2, Screen.height/2, 0.5, 1),
     }
+    t.atk_anims = {
+        StillAnimation.new("ninja/ninja_attack_up.png", 7, 0.04, Screen.width/2, Screen.height/2, 0.5, 0.75),
+        StillAnimation.new("ninja/ninja_attack_down.png", 7, 0.04, Screen.width/2, Screen.height/2, 0.5, 0.75),
+        StillAnimation.new("ninja/ninja_attack_left.png", 7, 0.04, Screen.width/2, Screen.height/2, 0.5, 0.75),
+        StillAnimation.new("ninja/ninja_attack_right.png", 7, 0.04, Screen.width/2, Screen.height/2, 0.5, 0.75),
+    }
     t.direction = Player.directions.down
     t.current_anim = t.idle_anims
 
