@@ -5,27 +5,20 @@ require("scripts.utility.geometry")
 require("scripts.utility.still_image")
 require("scripts.utility.still_animation")
 require("scripts.utility.input")
+require("scripts.utility.scene_management")
 
 local background = nil
 
 function love.load(arg)
-    -- background = still_image.new('background.png')
-
-    -- current_scene = require("scripts.scenes.menu_scene")
+    background = StillImage.new('background.png')
+    SceneManager:loadScene("game")
 end
 
 function love.update(dt)
-    if current_scene ~= nil then
-        current_scene:update(dt)
-        if current_scene.lateUpdate ~= nil then
-            current_scene:lateUpdate(dt)
-        end
-    end
+    SceneManager:update(dt)
 end
 
 function love.draw()
-    -- background:draw()
-    if current_scene ~= nil then
-        current_scene:draw()
-    end
+    background:draw()
+    SceneManager:draw()
 end
