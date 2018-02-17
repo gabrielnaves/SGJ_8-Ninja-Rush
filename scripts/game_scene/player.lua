@@ -25,6 +25,7 @@ function Player.new()
     t.acceleration = Vector.new(0, 0)
     t.max_velocity = 400
     t.max_accel = 1000
+    t.vel_decay = 0.9
 
     return setmetatable(t, Player.mt)
 end
@@ -36,9 +37,9 @@ end
 
 function Player:updateIdle(dt)
     self.anims[self.direction]:update(dt)
-    local x, y = Input.horizontal(), Input.vertical()
-    self.acceleration.x = x * self.max_accel
-    self.acceleration.y = y * self.max_accel
+    local input = Input.inputVector()
+    self.acceleration.x = input.x * self.max_accel
+    self.acceleration.y = input.y * self.max_accel
 end
 
 function Player:updateMotion(dt)
@@ -49,8 +50,16 @@ function Player:updateMotion(dt)
 end
 
 function Player:updateVelocity(dt)
-    self.velocity.x = self.velocity.x + self.acceleration.x * dt
-    self.velocity.y = self.velocity.y + self.acceleration.y * dt
+    if self.acceleration.x ~= 0 then
+        self.velocity.x = self.velocity.x + self.acceleration.x * dt
+    else
+        self.velocity.x = self.velocity.x * self.vel_decay
+    end
+    if self.acceleration.y ~= 0 then
+        self.velocity.y = self.velocity.y + self.acceleration.y * dt
+    else
+        self.velocity.y = self.velocity.y * self.vel_decay
+    end
 
     self.velocity.x = Mathf.clamp(self.velocity.x, self.max_velocity, -self.max_velocity)
     self.velocity.y = Mathf.clamp(self.velocity.y, self.max_velocity, -self.max_velocity)
@@ -62,13 +71,16 @@ function Player:updatePosition(dt)
 end
 
 function Player:updateDirection()
-    if self.velocity.x > 0 then
+    if Input.horizontal() > 0 then
         self.direction = Player.directions.right
-    elseif self.velocity.x < 0 then
+    end
+    if Input.horizontal() < 0 then
         self.direction = Player.directions.left
-    elseif self.velocity.y > 0 then
+    end
+    if Input.vertical() > 0 then
         self.direction = Player.directions.down
-    elseif self.velocity.y < 0 then
+    end
+    if Input.vertical() < 0 then
         self.direction = Player.directions.up
     end
 end

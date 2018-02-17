@@ -1,7 +1,13 @@
 Vector = {}
 
 function Vector.new(x, y)
+    if math.abs(x) < 1e-10 then x = 0 end
+    if math.abs(y) < 1e-10 then y = 0 end
     return setmetatable({ x=x, y=y }, { __index=Vector })
+end
+
+function Vector.fromPolar(mag, th)
+    return Vector.new(mag*math.cos(th), mag*math.sin(th))
 end
 
 function Vector:magnitude()
@@ -10,6 +16,11 @@ end
 
 function Vector:angle()
     return math.atan2(self.y, self.x)
+end
+
+function Vector:normalized()
+    if self.x == 0 and self.y == 0 then return self end
+    return Vector.fromPolar(1, self:angle())
 end
 
 Rectangle = {}

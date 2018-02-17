@@ -47,3 +47,7 @@ function Input.horizontal()
     end
     return result
 end
+
+function Input.inputVector()
+    return Vector.new(Input.horizontal(), Input.vertical()):normalized()
+end
