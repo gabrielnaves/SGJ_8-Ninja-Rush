@@ -11,7 +11,6 @@ function GameScene.new()
         player=Player.new(),
         map=MapGenerator.new(),
     }
-    t.map:startTransition()
     return setmetatable(t, GameScene.mt)
 end
 

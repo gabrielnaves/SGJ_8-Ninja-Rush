@@ -33,12 +33,18 @@ function Player.new()
     t.updateFunction = Player.updateIdle
 
     -- Movement data
-    t.rect = Rectangle.new(Screen.width/2, Screen.height/2, 48, 64, 0.5, 1)
+    t.rect = Rectangle.new(Screen.width/2, Screen.height/2, 30, 20, 0.5, 1)
     t.velocity = Vector.new(0, 0)
     t.acceleration = Vector.new(0, 0)
     t.max_velocity = 300
     t.max_accel = 1000
     t.vel_decay = 0.85
+
+    -- Scenario limits
+    t.left_limit = 96
+    t.right_limit = Screen.width - 96
+    t.upper_limit = 96
+    t.lower_limit = Screen.height - 96
 
     -- Health
     t.hp = 3
@@ -145,6 +151,24 @@ end
 function Player:updatePosition(dt)
     self.rect.x = self.rect.x + self.velocity.x * dt
     self.rect.y = self.rect.y + self.velocity.y * dt
+
+    -- Check X limits
+    if self.rect:topLeft().x < self.left_limit then
+        self.rect.x = self.left_limit + self.rect.width*self.rect.pivotX
+        self.velocity.x = 0
+    elseif self.rect:bottomRight().x > self.right_limit then
+        self.rect.x = self.right_limit - self.rect.width*(1-self.rect.pivotX)
+        self.velocity.x = 0
+    end
+
+    -- Check Y limits
+    if self.rect:topRight().y < self.upper_limit then
+        self.rect.y = self.upper_limit + self.rect.height*self.rect.pivotY
+        self.velocity.y = 0
+    elseif self.rect:bottomLeft().y > self.lower_limit then
+        self.rect.y = self.lower_limit - self.rect.height*(1-self.rect.pivotY)
+        self.velocity.y = 0
+    end
 end
 
 function Player:updateAnimationPositions()

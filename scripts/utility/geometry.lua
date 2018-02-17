@@ -42,6 +42,22 @@ function Rectangle.new(x, y, width, height, pivotX, pivotY)
     return setmetatable(t, mt)
 end
 
+function Rectangle:topLeft()
+    return Vector.new(self.x - self.width*self.pivotX, self.y - self.height*self.pivotY)
+end
+
+function Rectangle:topRight()
+    return Vector.new(self.x + self.width*(1-self.pivotX), self.y - self.height*self.pivotY)
+end
+
+function Rectangle:bottomLeft()
+    return Vector.new(self.x - self.width*self.pivotX, self.y + self.height*(1-self.pivotY))
+end
+
+function Rectangle:bottomRight()
+    return Vector.new(self.x + self.width*(1-self.pivotX), self.y + self.height*(1-self.pivotY))
+end
+
 function Rectangle:overlapping(other)
     return Geometry.overlappingRects(self, other)
 end
