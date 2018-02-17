@@ -85,8 +85,7 @@ end
 function Player:updateIdle(dt)
     self.current_anim[self.direction]:update(dt)
     local input = Input.inputVector()
-    self.acceleration.x = input.x * self.max_accel
-    self.acceleration.y = input.y * self.max_accel
+    self.acceleration = input * self.max_accel
 
     if input:magnitude() > 0.0001 then
         self:changeState(Player.states.moving, self.updateMoving, self.mov_anims)
@@ -100,8 +99,7 @@ end
 function Player:updateMoving(dt)
     self.current_anim[self.direction]:update(dt)
     local input = Input.inputVector()
-    self.acceleration.x = input.x * self.max_accel
-    self.acceleration.y = input.y * self.max_accel
+    self.acceleration = input * self.max_accel
 
     if input:magnitude() < 0.0001 then
         self:changeState(Player.states.idle, self.updateIdle, self.idle_anims)
