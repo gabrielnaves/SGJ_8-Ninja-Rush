@@ -43,27 +43,42 @@ function Player.new()
     -- Health
     t.hp = 3
 
+    -- Timers
+    t.attack_time = 0.04*10
+    t.attack_cooldown = 0.2
+    t.attack_timer = 0
+
     return setmetatable(t, Player.mt)
 end
 
+function Player:changeState(state, updateFunction, anim)
+    self:resetAnimations(self.current_anim)
+    self.state = state
+    self.updateFunction = updateFunction
+    self.current_anim = anim
+end
+
 function Player:update(dt)
+    self.attack_timer = self.attack_timer + dt
     self:updateDirection(dt)
     self:updateFunction(dt)
     self:updateMotion(dt)
 end
 
 function Player:updateDirection()
-    if Input.horizontal() > 0 then
-        self.direction = Player.directions.right
-    end
-    if Input.horizontal() < 0 then
-        self.direction = Player.directions.left
-    end
-    if Input.vertical() > 0 then
-        self.direction = Player.directions.down
-    end
-    if Input.vertical() < 0 then
-        self.direction = Player.directions.up
+    if self.state ~= Player.states.attacking then
+        if Input.horizontal() > 0 then
+            self.direction = Player.directions.right
+        end
+        if Input.horizontal() < 0 then
+            self.direction = Player.directions.left
+        end
+        if Input.vertical() > 0 then
+            self.direction = Player.directions.down
+        end
+        if Input.vertical() < 0 then
+            self.direction = Player.directions.up
+        end
     end
 end
 
@@ -74,9 +89,11 @@ function Player:updateIdle(dt)
     self.acceleration.y = input.y * self.max_accel
 
     if input:magnitude() > 0.0001 then
-        self.state = Player.states.moving
-        self.updateFunction = self.updateMoving
-        self.current_anim = self.mov_anims
+        self:changeState(Player.states.moving, self.updateMoving, self.mov_anims)
+    end
+    if Input.attack_button and self.attack_timer > self.attack_cooldown then
+        self:changeState(Player.states.attacking, self.updateAttacking, self.atk_anims)
+        self.attack_timer = 0
     end
 end
 
@@ -87,14 +104,21 @@ function Player:updateMoving(dt)
     self.acceleration.y = input.y * self.max_accel
 
     if input:magnitude() < 0.0001 then
-        self.state = Player.states.idle
-        self.updateFunction = self.updateIdle
-        self.current_anim = self.idle_anims
+        self:changeState(Player.states.idle, self.updateIdle, self.idle_anims)
+    end
+    if Input.attack_button and self.attack_timer > self.attack_cooldown then
+        self:changeState(Player.states.attacking, self.updateAttacking, self.atk_anims)
+        self.attack_timer = 0
     end
 end
 
 function Player:updateAttacking(dt)
-
+    self.acceleration = Vector.new(0, 0)
+    self.current_anim[self.direction]:update(dt)
+    if self.attack_timer > self.attack_time then
+        self.attack_timer = 0
+        self:changeState(Player.states.idle, self.updateIdle, self.idle_anims)
+    end
 end
 
 function Player:updateMotion(dt)
@@ -129,6 +153,12 @@ function Player:updateAnimationPositions()
     for i, anim in ipairs(self.current_anim) do
         anim.x = self.rect.x
         anim.y = self.rect.y
+    end
+end
+
+function Player:resetAnimations(anims)
+    for i, anim in ipairs(anims) do
+        anim:reset()
     end
 end
 
