@@ -15,6 +15,8 @@ function love.load(arg)
 end
 
 function love.update(dt)
+    Mouse.update()
+    Input.update()
     SceneManager:update(dt)
 end
 
