@@ -1,7 +1,7 @@
 MapGenerator = {}
 MapGenerator.mt = { __index=MapGenerator }
 
-MapGenerator.room_amount = 4
+MapGenerator.room_amount = 3
 
 function MapGenerator.new()
     local map = {}
@@ -12,17 +12,40 @@ function MapGenerator.new()
         table.insert(map.rooms, Room.new(i, map.rooms))
     end
 
+    map.transitioning = false
+    map.transition_time = 2
+    map.transition_timer = 0
+    map.room_distance = Screen.height+150
+    map.current_height = 0
+    map.start_height = 0
+    map.end_height = 0
+
     return setmetatable(map, MapGenerator.mt)
 end
 
+function MapGenerator:startTransition()
+    self.start_height = self.current_height
+    self.end_height = self.start_height + self.room_distance
+    self.transitioning = true
+    self.transition_timer = 0
+end
+
 function MapGenerator:update(dt)
-    for i, room in ipairs(self.rooms) do
-        room.image.y = room.image.y + dt * 200
+    if self.transitioning then
+        self.transition_timer = self.transition_timer + dt
+        self.current_height = Mathf.lerp(self.start_height, self.end_height,
+                                         self.transition_timer / self.transition_time)
+
+        if self.transition_timer > self.transition_time then
+            self.transitioning = false
+            self.current_height = self.end_height
+        end
     end
 end
 
 function MapGenerator:draw()
     for i, room in ipairs(self.rooms) do
+        room.image.y = self.current_height-(i-1)*(self.room_distance)
         room:draw()
     end
 end
@@ -36,7 +59,10 @@ function Room.new(i, rooms)
 
     room.previous = previous
     room.visited = false
+    room.boss = i == MapGenerator.room_amount
     room.image = StillImage.new("room.png", 0, -(i-1)*(Screen.height+150), 0, 0)
+
+    -- Door generation
     room.doors = {}
     if i == MapGenerator.room_amount then
         room.doors.down = StillImage.new("doors/boss_door_up.png", Screen.width/2, Screen.height, 0.5, 1)

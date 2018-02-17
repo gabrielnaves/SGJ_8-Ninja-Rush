@@ -9,8 +9,9 @@ GameScene.mt = { __index=GameScene }
 function GameScene.new()
     local t = {
         player=Player.new(),
-        map=MapGenerator.new()
+        map=MapGenerator.new(),
     }
+    t.map:startTransition()
     return setmetatable(t, GameScene.mt)
 end
 
