@@ -30,9 +30,10 @@ end
 
 function Input.vertical()
     local result = 0
-    if love.keyboard.isDown("w") then
+    if love.keyboard.isDown("w") or love.keyboard.isDown("up") then
         result = result - 1
-    elseif love.keyboard.isDown("s") then
+    end
+    if love.keyboard.isDown("s") or love.keyboard.isDown("down") then
         result = result + 1
     end
     return result
@@ -40,9 +41,10 @@ end
 
 function Input.horizontal()
     local result = 0
-    if love.keyboard.isDown("a") then
+    if love.keyboard.isDown("a") or love.keyboard.isDown("left") then
         result = result - 1
-    elseif love.keyboard.isDown("d") then
+    end
+    if love.keyboard.isDown("d") or love.keyboard.isDown("right") then
         result = result + 1
     end
     return result
