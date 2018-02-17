@@ -1,9 +1,18 @@
 Vector = {}
+Vector.mt = {
+    __index = Vector,
+    __add = function (lhs, rhs)
+        return Vector.new(lhs.x+rhs.x, lhs.y + rhs.y)
+    end,
+    __mul = function (lhs, rhs)
+        return Vector.new(lhs.x*rhs, lhs.y * rhs)
+    end,
+}
 
 function Vector.new(x, y)
     if math.abs(x) < 1e-10 then x = 0 end
     if math.abs(y) < 1e-10 then y = 0 end
-    return setmetatable({ x=x, y=y }, { __index=Vector })
+    return setmetatable({ x=x, y=y }, Vector.mt)
 end
 
 function Vector.fromPolar(mag, th)

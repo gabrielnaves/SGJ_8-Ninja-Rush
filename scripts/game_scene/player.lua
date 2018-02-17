@@ -23,9 +23,9 @@ function Player.new()
     t.rect = Rectangle.new(Screen.width/2, Screen.height/2, 48, 64, 0.5, 1)
     t.velocity = Vector.new(0, 0)
     t.acceleration = Vector.new(0, 0)
-    t.max_velocity = 400
+    t.max_velocity = 300
     t.max_accel = 1000
-    t.vel_decay = 0.9
+    t.vel_decay = 0.85
 
     return setmetatable(t, Player.mt)
 end
@@ -61,8 +61,9 @@ function Player:updateVelocity(dt)
         self.velocity.y = self.velocity.y * self.vel_decay
     end
 
-    self.velocity.x = Mathf.clamp(self.velocity.x, self.max_velocity, -self.max_velocity)
-    self.velocity.y = Mathf.clamp(self.velocity.y, self.max_velocity, -self.max_velocity)
+    if self.velocity:magnitude() > self.max_velocity then
+        self.velocity = self.velocity:normalized() * self.max_velocity
+    end
 end
 
 function Player:updatePosition(dt)
