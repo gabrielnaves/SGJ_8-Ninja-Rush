@@ -1,18 +1,17 @@
--- Mouse input
-mouse = {}
-mouse.mouseX = 0
-mouse.mouseY = 0
-mouse.mouseButton = false
-mouse.mouseButtonDown = false
+Mouse = {}
+Mouse.mouseX = 0
+Mouse.mouseY = 0
+Mouse.mouseButton = false
+Mouse.mouseButtonDown = false
 
-function mouse:update()
+function Mouse.update()
     local mouseDown = love.mouse.isDown(1)
-    if mouseDown and not self.mouseButton then
-        self.mouseButtonDown = true
+    if mouseDown and not Mouse.mouseButton then
+        Mouse.mouseButtonDown = true
     else
-        self.mouseButtonDown = false
+        Mouse.mouseButtonDown = false
     end
-    self.mouseButton = mouseDown
-    self.mouseX = love.mouse.getX()
-    self.mouseY = love.mouse.getY()
+    Mouse.mouseButton = mouseDown
+    Mouse.mouseX = love.mouse.getX()
+    Mouse.mouseY = love.mouse.getY()
 end

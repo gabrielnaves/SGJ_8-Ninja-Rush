@@ -1,5 +1,5 @@
-screen = {}
+Screen = {}
 
 -- Definitions
-screen.screen_width = love.graphics.getWidth()
-screen.screen_height = love.graphics.getHeight()
+Screen.screen_width = love.graphics.getWidth()
+Screen.screen_height = love.graphics.getHeight()

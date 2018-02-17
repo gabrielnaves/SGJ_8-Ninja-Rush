@@ -1,5 +1,5 @@
-gamemath = {}
+Gamemath = {}
 
-function gamemath.clamp(value, max, min)
+function Gamemath.clamp(value, max, min)
     return math.max(math.min(value, max), min)
 end
