@@ -10,7 +10,7 @@ require("scripts.utility.scene_management")
 local background = nil
 
 function love.load(arg)
-    background = StillImage.new('background.png')
+    background = StillImage.new('background.png', Screen.width/2, Screen.height/2, 0.5, 0.5)
     SceneManager:loadScene("game")
 end
 
