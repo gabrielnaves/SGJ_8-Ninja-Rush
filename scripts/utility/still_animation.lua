@@ -49,8 +49,8 @@ end
 
 function StillAnimation:draw()
     love.graphics.draw(self.img, self.frames[self.current_frame],
-                        math.floor(self.x - self.width*self.pivotX),
-                        math.floor(self.y - self.height*self.pivotY))
+                       self.x - self.width*self.pivotX,
+                       self.y - self.height*self.pivotY)
 end
 
 function StillAnimation:reset()
