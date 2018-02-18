@@ -1,6 +1,7 @@
 require("scripts.game_scene.player")
 require("scripts.game_scene.map_generator")
 require("scripts.game_scene.kamaitachi")
+require("scripts.game_scene.hp_bar")
 
 local GameScene = {}
 
@@ -57,6 +58,7 @@ end
 
 function GameScene:draw()
     self:drawFunction()
+    HpBar.draw(self.player.hp)
 end
 
 function GameScene:drawClear()
@@ -93,9 +95,9 @@ function GameScene:endTransition()
     self.player.rect.y = Screen.lower_bound - self.player.rect.height*(1-self.player.rect.pivotY)
     self.player.velocity = Vector.new(0, 0)
 
-    self.state = GameScene.states.clear
-    self.updateFunction = self.updateClear
-    self.drawFunction = self.drawClear
+    self.state = GameScene.states.fighting
+    self.updateFunction = self.updateFighting
+    self.drawFunction = self.drawFighting
 end
 
 function GameScene:sortEntityArray()

@@ -15,10 +15,10 @@ function Kamaitachi.new()
         StillAnimation.new("kamaitachi/kama_idle_right.png", 4, 0.1, 0, 0, 0.5, 1),
     }
     t.atk_anims = {
-        StillAnimation.new("kamaitachi/kama_atk_up.png", 10, 0.08, 0, 0, 0.5, 0.75),
-        StillAnimation.new("kamaitachi/kama_atk_down.png", 10, 0.08, 0, 0, 0.5, 0.75),
-        StillAnimation.new("kamaitachi/kama_atk_left.png", 10, 0.08, 0, 0, 0.5, 0.75),
-        StillAnimation.new("kamaitachi/kama_atk_right.png", 10, 0.08, 0, 0, 0.5, 0.75),
+        StillAnimation.new("kamaitachi/kama_atk_up.png", 10, 0.1, 0, 0, 0.5, 0.75),
+        StillAnimation.new("kamaitachi/kama_atk_down.png", 10, 0.1, 0, 0, 0.5, 0.75),
+        StillAnimation.new("kamaitachi/kama_atk_left.png", 10, 0.1, 0, 0, 0.5, 0.75),
+        StillAnimation.new("kamaitachi/kama_atk_right.png", 10, 0.1, 0, 0, 0.5, 0.75),
     }
     t.direction = Kamaitachi.directions.down
     t.current_anim = t.idle_anims

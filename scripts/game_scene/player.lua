@@ -36,14 +36,14 @@ function Player.new()
     t.rect = Rectangle.new(Screen.width/2, Screen.height/2, 30, 20, 0.5, 1)
     t.velocity = Vector.new(0, 0)
     t.acceleration = Vector.new(0, 0)
-    t.max_velocity = 300
+    t.max_velocity = 400
     t.max_accel = 1000
     t.vel_decay = 0.85
     t.dash_input = nil
     t.max_dash_velocity = 4000
 
     -- Health
-    t.hp = 3
+    t.hp = 5
 
     -- Timers
     t.attack_cooldown = 0.2
