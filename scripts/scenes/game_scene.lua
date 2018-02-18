@@ -1,5 +1,6 @@
 require("scripts.game_scene.player")
 require("scripts.game_scene.map_generator")
+require("scripts.game_scene.kamaitachi")
 
 local GameScene = {}
 
@@ -12,8 +13,10 @@ function GameScene.new()
     local t = {
         player=Player.new(),
         map=MapGenerator.new(),
-        state=GameScene.states.clear,
+        enemy=Kamaitachi.new(),
+
         timeSinceLevelLoad=0,
+        state=GameScene.states.clear,
         updateFunction=GameScene.updateClear,
         drawFunction=GameScene.drawClear,
     }
@@ -27,6 +30,7 @@ end
 
 function GameScene:updateClear(dt)
     self.player:update(dt)
+    self.enemy:update(dt, self.player)
     if self:shouldTransition() then
         self:startTransition()
     end
@@ -45,7 +49,13 @@ end
 
 function GameScene:drawClear()
     self.map:draw()
-    self.player:draw()
+    if self.player.rect.y < self.enemy.rect.y then
+        self.player:draw()
+        self.enemy:draw()
+    else
+        self.enemy:draw()
+        self.player:draw()
+    end
 end
 
 function GameScene:drawTransitioning()
