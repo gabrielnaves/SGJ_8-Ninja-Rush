@@ -2,10 +2,13 @@ Vector = {}
 Vector.mt = {
     __index = Vector,
     __add = function (lhs, rhs)
-        return Vector.new(lhs.x+rhs.x, lhs.y + rhs.y)
+        return Vector.new(lhs.x + rhs.x, lhs.y + rhs.y)
+    end,
+    __sub = function (lhs, rhs)
+        return Vector.new(lhs.x - rhs.x, lhs.y - rhs.y)
     end,
     __mul = function (lhs, rhs)
-        return Vector.new(lhs.x*rhs, lhs.y * rhs)
+        return Vector.new(lhs.x * rhs, lhs.y * rhs)
     end,
 }
 
