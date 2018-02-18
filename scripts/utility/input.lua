@@ -17,6 +17,8 @@ Input.attack_button = false
 Input.attack_button_down = false
 Input.dash_button = false
 Input.dash_button_down = false
+Input.pause_button = false
+Input.pause_button_down = false
 
 function Input.update()
     local attack_down = love.keyboard.isDown("space")
@@ -26,6 +28,10 @@ function Input.update()
     local dash_down = love.keyboard.isDown("lshift")
     Input.dash_button_down = (dash_down and not Input.dash_button)
     Input.dash_button = dash_down
+
+    local pause_down = love.keyboard.isDown("p")
+    Input.pause_button_down = (pause_down and not Input.pause_button)
+    Input.pause_button = pause_down
 end
 
 function Input.vertical()

@@ -21,14 +21,24 @@ function GameScene.new()
         state=GameScene.states.clear,
         updateFunction=GameScene.updateClear,
         drawFunction=GameScene.drawClear,
+        paused=false,
     }
     table.insert(t.entities, t.player)
     return setmetatable(t, GameScene.mt)
 end
 
 function GameScene:update(dt)
-    self.time_since_level_load = self.time_since_level_load + dt
-    self:updateFunction(dt)
+    if not self.paused then
+        self.time_since_level_load = self.time_since_level_load + dt
+        self:updateFunction(dt)
+        if Input.pause_button_down then
+            self.paused = true
+        end
+    else
+        if Input.pause_button_down then
+            self.paused = false
+        end
+    end
 end
 
 function GameScene:updateClear(dt)
@@ -78,6 +88,10 @@ end
 function GameScene:draw()
     self:drawFunction()
     HpBar.draw(self.player.hp)
+    if self.paused then
+        self.black_box:draw()
+        Text.printCentered("paused: press p to resume", {255, 255, 255}, Screen.width/2, Screen.height/2, 1)
+    end
 end
 
 function GameScene:drawClear()
