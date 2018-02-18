@@ -63,8 +63,7 @@ Room.mt = { __index=Room }
 function Room.new(i, rooms)
     local room = {}
 
-    room.previous = previous
-    room.visited = false
+    room.count = i
     room.boss = i == MapGenerator.room_amount
     room.image = StillImage.new("room.png", 0, -(i-1)*(Screen.height+150), 0, 0)
 

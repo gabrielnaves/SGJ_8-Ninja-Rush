@@ -36,7 +36,7 @@ function Kamaitachi.new()
     -- Timers
     t.min_attack_cooldown = 1
     t.max_attack_cooldown = 3
-    t.attack_cooldown = love.math.random()*(t.max_attack_cooldown-t.min_attack_cooldown) + t.min_attack_cooldown
+    t.attack_cooldown = Mathf.randomFloat(t.min_attack_cooldown, t.max_attack_cooldown)
     t.attack_time = 0.4
     t.attack_timer = 0
 

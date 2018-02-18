@@ -1,7 +1,7 @@
 require("scripts.game_scene.player")
 require("scripts.game_scene.map_generator")
-require("scripts.game_scene.kamaitachi")
 require("scripts.game_scene.hp_bar")
+require("scripts.game_scene.enemy_spawner")
 
 local GameScene = {}
 
@@ -14,19 +14,14 @@ function GameScene.new()
     local t = {
         player=Player.new(),
         map=MapGenerator.new(),
-        entities={
-            Kamaitachi.new(),
-            Kamaitachi.new(),
-        },
+        entities={},
         black_box=StillImage.new("black_box.png", Screen.width/2, Screen.height/2, 0.5, 0.5),
 
         timeSinceLevelLoad=0,
-        state=GameScene.states.fighting,
-        updateFunction=GameScene.updateFighting,
-        drawFunction=GameScene.drawFighting,
+        state=GameScene.states.clear,
+        updateFunction=GameScene.updateClear,
+        drawFunction=GameScene.drawClear,
     }
-    t.entities[2].rect.x = Screen.width/4
-    t.entities[2].rect.y = 350
     table.insert(t.entities, t.player)
     return setmetatable(t, GameScene.mt)
 end
@@ -55,6 +50,7 @@ function GameScene:updateFighting(dt)
         entity:update(dt, self.player)
     end
     self:runCollisions()
+    self:removeDeadEnemies()
     self:sortEntityArray()
     self:checkGameOver()
 end
@@ -100,7 +96,7 @@ function GameScene:drawGameOver()
     end
     self.black_box:draw()
     Text.printCentered("Game Over!", {255, 255, 255}, Screen.width/2, Screen.height/2-50, 3)
-    Text.printCentered("Click here the screen to play again", {255, 255, 255}, Screen.width/2, Screen.height/2+50, 1)
+    Text.printCentered("click anywhere to play again", {255, 255, 255}, Screen.width/2, Screen.height/2+50, 1)
 end
 
 function GameScene:shouldTransition()
@@ -124,6 +120,25 @@ function GameScene:endTransition()
     self.state = GameScene.states.fighting
     self.updateFunction = self.updateFighting
     self.drawFunction = self.drawFighting
+
+    EnemySpawner.spawnEnemies(self.entities, self.map.rooms[self.map.current_room])
+end
+
+function GameScene:removeDeadEnemies()
+    local dead_enemies = {}
+    for i,entity in ipairs(self.entities) do
+        if entity ~= self.player and entity.hp <= 0 then
+            table.insert(dead_enemies, i)
+        end
+    end
+    for i,enemy_to_remove in ipairs(dead_enemies) do
+        table.remove(self.entities, enemy_to_remove)
+    end
+    if #self.entities == 1 and self.entities[1] == self.player then
+        self.state = GameScene.states.clear
+        self.updateFunction = self.updateClear
+        self.drawFunction = self.drawClear
+    end
 end
 
 function GameScene:sortEntityArray()
