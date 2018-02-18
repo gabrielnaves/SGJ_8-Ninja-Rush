@@ -50,10 +50,22 @@ function GameScene:updateTransitioning(dt)
 end
 
 function GameScene:updateFighting(dt)
+    -- self.player:update(dt)
     for i, entity in ipairs(self.entities) do
         entity:update(dt, self.player)
     end
+    self:runCollisions()
     self:sortEntityArray()
+end
+
+function GameScene:runCollisions()
+    for i,entity in ipairs(self.entities) do
+        if entity ~= self.player then
+            if self.player.rect:overlapping(entity.rect) then
+                self.player:receiveDamage(entity)
+            end
+        end
+    end
 end
 
 function GameScene:draw()

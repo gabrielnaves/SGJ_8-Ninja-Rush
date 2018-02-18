@@ -54,6 +54,11 @@ function Player.new()
     t.dash_time = 0.05
     t.dash_timer = 0
 
+    t.hit_time = 0.8
+    t.hit_timer = t.hit_time
+    t.blink_time = 0.2
+    t.blink_timer = 0
+
     return setmetatable(t, Player.mt)
 end
 
@@ -64,12 +69,29 @@ function Player:changeState(state, updateFunction, anim)
     self.current_anim = anim
 end
 
+function Player:receiveDamage(enemy)
+    if self.hit_timer > self.hit_time then
+        self.hit_timer = 0
+        self.hp = self.hp - 1
+        local current_pos = Vector.new(self.rect.x, self.rect.y)
+        local enemy_pos = Vector.new(enemy.rect.x, enemy.rect.y)
+        self.velocity = (current_pos - enemy_pos):normalized() * self.max_velocity
+    end
+end
+
 function Player:update(dt)
-    self.attack_timer = self.attack_timer + dt
-    self.dash_timer = self.dash_timer + dt
+    self:updateFixedTimers(dt)
     self:updateDirection(dt)
     self:updateFunction(dt)
     self:updateMotion(dt)
+end
+
+function Player:updateFixedTimers(dt)
+    self.attack_timer = self.attack_timer + dt
+    self.dash_timer = self.dash_timer + dt
+    self.hit_timer = self.hit_timer + dt
+    self.blink_timer = self.blink_timer + dt
+    if self.blink_timer > self.blink_time then self.blink_timer = 0 end
 end
 
 function Player:updateDirection()
@@ -194,7 +216,11 @@ end
 
 function Player:draw()
     self:updateAnimationPositions()
-    self.current_anim[self.direction]:draw()
+    if self.hit_timer > self.hit_time then
+        self.current_anim[self.direction]:draw()
+    elseif self.blink_timer > self.blink_time / 2 then
+        self.current_anim[self.direction]:draw()
+    end
 end
 
 function Player:updateAnimationPositions()
