@@ -128,7 +128,6 @@ end
 function Player:updateMotion(dt)
     self:updateVelocity(dt)
     self:updatePosition(dt)
-    self:updateAnimationPositions(dt)
 end
 
 function Player:updateVelocity(dt)
@@ -171,13 +170,6 @@ function Player:updatePosition(dt)
     end
 end
 
-function Player:updateAnimationPositions()
-    for i, anim in ipairs(self.current_anim) do
-        anim.x = self.rect.x
-        anim.y = self.rect.y
-    end
-end
-
 function Player:resetAnimations(anims)
     for i, anim in ipairs(anims) do
         anim:reset()
@@ -185,5 +177,13 @@ function Player:resetAnimations(anims)
 end
 
 function Player:draw()
+    self:updateAnimationPositions()
     self.current_anim[self.direction]:draw()
+end
+
+function Player:updateAnimationPositions()
+    for i, anim in ipairs(self.current_anim) do
+        anim.x = self.rect.x
+        anim.y = self.rect.y
+    end
 end

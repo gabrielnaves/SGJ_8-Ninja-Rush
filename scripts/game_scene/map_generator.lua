@@ -1,7 +1,7 @@
 MapGenerator = {}
 MapGenerator.mt = { __index=MapGenerator }
 
-MapGenerator.room_amount = 3
+MapGenerator.room_amount = 5
 
 function MapGenerator.new()
     local map = {}
@@ -19,8 +19,13 @@ function MapGenerator.new()
     map.current_height = 0
     map.start_height = 0
     map.end_height = 0
+    map.current_room = 1
 
     return setmetatable(map, MapGenerator.mt)
+end
+
+function MapGenerator:canTransition()
+    return not self.transitioning and self.current_room < MapGenerator.room_amount
 end
 
 function MapGenerator:startTransition()
@@ -28,6 +33,7 @@ function MapGenerator:startTransition()
     self.end_height = self.start_height + self.room_distance
     self.transitioning = true
     self.transition_timer = 0
+    self.current_room = self.current_room + 1
 end
 
 function MapGenerator:update(dt)

@@ -25,5 +25,7 @@ function StillImage.new(img_name, x, y, pivotX, pivotY)
 end
 
 function StillImage:draw()
-    love.graphics.draw(self.img, self.x - self.width*self.pivotX, self.y - self.height*self.pivotY)
+    love.graphics.draw(self.img,
+                       math.floor(self.x - self.width*self.pivotX),
+                       math.floor(self.y - self.height*self.pivotY))
 end
