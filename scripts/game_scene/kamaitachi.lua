@@ -28,13 +28,15 @@ function Kamaitachi.new()
     t.updateFunction = Kamaitachi.updateIdle
 
     -- Motion data
-    t.rect = Rectangle.new(3*Screen.width/4, Screen.height/3, 30, 20, 0.5, 1)
+    t.rect = Rectangle.new(Screen.width/4, Screen.height/2, 30, 20, 0.5, 1)
     t.attack_speed = 1000
     t.attack_vector = Vector.new(0, 0)
     t.velocity = Vector.new(0, 0)
 
     -- Timers
-    t.attack_cooldown = 2
+    t.min_attack_cooldown = 1
+    t.max_attack_cooldown = 3
+    t.attack_cooldown = love.math.random()*(t.max_attack_cooldown-t.min_attack_cooldown) + t.min_attack_cooldown
     t.attack_time = 0.4
     t.attack_timer = 0
 
@@ -98,6 +100,7 @@ function Kamaitachi:updateAttacking(dt, player)
         self:updatePosition(dt)
         self.attack_timer = self.attack_timer + dt
         if self.attack_timer > self.attack_time then
+            self.attack_cooldown = love.math.random()*(self.max_attack_cooldown-self.min_attack_cooldown) + self.min_attack_cooldown
             self:changeState(Kamaitachi.states.idle, self.updateIdle, self.idle_anims)
         end
     end

@@ -13,13 +13,19 @@ function GameScene.new()
     local t = {
         player=Player.new(),
         map=MapGenerator.new(),
-        enemy=Kamaitachi.new(),
+        entities={
+            Kamaitachi.new(),
+            Kamaitachi.new(),
+        },
 
         timeSinceLevelLoad=0,
-        state=GameScene.states.clear,
-        updateFunction=GameScene.updateClear,
-        drawFunction=GameScene.drawClear,
+        state=GameScene.states.fighting,
+        updateFunction=GameScene.updateFighting,
+        drawFunction=GameScene.drawFighting,
     }
+    t.entities[2].rect.x = Screen.width/4
+    t.entities[2].rect.y = 350
+    table.insert(t.entities, t.player)
     return setmetatable(t, GameScene.mt)
 end
 
@@ -30,7 +36,6 @@ end
 
 function GameScene:updateClear(dt)
     self.player:update(dt)
-    self.enemy:update(dt, self.player)
     if self:shouldTransition() then
         self:startTransition()
     end
@@ -43,23 +48,31 @@ function GameScene:updateTransitioning(dt)
     end
 end
 
+function GameScene:updateFighting(dt)
+    for i, entity in ipairs(self.entities) do
+        entity:update(dt, self.player)
+    end
+    self:sortEntityArray()
+end
+
 function GameScene:draw()
     self:drawFunction()
 end
 
 function GameScene:drawClear()
     self.map:draw()
-    if self.player.rect.y < self.enemy.rect.y then
-        self.player:draw()
-        self.enemy:draw()
-    else
-        self.enemy:draw()
-        self.player:draw()
-    end
+    self.player:draw()
 end
 
 function GameScene:drawTransitioning()
     self.map:draw()
+end
+
+function GameScene:drawFighting()
+    self.map:draw()
+    for i, entity in ipairs(self.entities) do
+        entity:draw()
+    end
 end
 
 function GameScene:shouldTransition()
@@ -83,6 +96,10 @@ function GameScene:endTransition()
     self.state = GameScene.states.clear
     self.updateFunction = self.updateClear
     self.drawFunction = self.drawClear
+end
+
+function GameScene:sortEntityArray()
+    table.sort(self.entities, function(a, b) return a.rect.y < b.rect.y end)
 end
 
 return GameScene
