@@ -58,16 +58,6 @@ function GameScene:updateFighting(dt)
     self:sortEntityArray()
 end
 
-function GameScene:runCollisions()
-    for i,entity in ipairs(self.entities) do
-        if entity ~= self.player then
-            if self.player.rect:overlapping(entity.rect) then
-                self.player:receiveDamage(entity)
-            end
-        end
-    end
-end
-
 function GameScene:draw()
     self:drawFunction()
     HpBar.draw(self.player.hp)
@@ -114,6 +104,45 @@ end
 
 function GameScene:sortEntityArray()
     table.sort(self.entities, function(a, b) return a.rect.y < b.rect.y end)
+end
+
+function GameScene:runCollisions()
+    for i,entity in ipairs(self.entities) do
+        if entity ~= self.player then
+            if self.player.rect:overlapping(entity.rect) then
+                self.player:receiveDamage(entity)
+            end
+            if self.player.state == Player.states.attacking then
+                if self.player.direction == Player.directions.up then
+                    if entity.rect.y < self.player.rect.y and entity.rect.y > self.player.rect.y - 100
+                       and entity.rect.x > self.player.rect.x-40
+                       and entity.rect.x < self.player.rect.x+40 then
+                        entity:receiveDamage()
+                    end
+                elseif self.player.direction == Player.directions.down then
+                    if entity.rect.y > self.player.rect.y and entity.rect.y < self.player.rect.y + 70
+                       and entity.rect.x > self.player.rect.x-40
+                       and entity.rect.x < self.player.rect.x+40 then
+                        entity:receiveDamage()
+                    end
+                elseif self.player.direction == Player.directions.left then
+                    if entity.rect.y < self.player.rect.y+10
+                       and entity.rect.y > self.player.rect.y-40
+                       and entity.rect.x < self.player.rect.x
+                       and entity.rect.x > self.player.rect.x - 100 then
+                        entity:receiveDamage()
+                    end
+                elseif self.player.direction == Player.directions.right then
+                    if entity.rect.y < self.player.rect.y+10
+                       and entity.rect.y > self.player.rect.y-40
+                       and entity.rect.x > self.player.rect.x
+                       and entity.rect.x < self.player.rect.x + 100 then
+                        entity:receiveDamage()
+                    end
+                end
+            end
+        end
+    end
 end
 
 return GameScene
