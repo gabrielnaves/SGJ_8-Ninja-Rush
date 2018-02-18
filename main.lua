@@ -6,6 +6,7 @@ require("scripts.utility.still_image")
 require("scripts.utility.still_animation")
 require("scripts.utility.input")
 require("scripts.utility.scene_management")
+require("scripts.utility.text")
 
 local background = nil
 

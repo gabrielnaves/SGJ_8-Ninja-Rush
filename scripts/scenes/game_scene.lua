@@ -18,6 +18,7 @@ function GameScene.new()
             Kamaitachi.new(),
             Kamaitachi.new(),
         },
+        black_box=StillImage.new("black_box.png", Screen.width/2, Screen.height/2, 0.5, 0.5),
 
         timeSinceLevelLoad=0,
         state=GameScene.states.fighting,
@@ -50,12 +51,25 @@ function GameScene:updateTransitioning(dt)
 end
 
 function GameScene:updateFighting(dt)
-    -- self.player:update(dt)
     for i, entity in ipairs(self.entities) do
         entity:update(dt, self.player)
     end
     self:runCollisions()
     self:sortEntityArray()
+    self:checkGameOver()
+end
+
+function GameScene:updateGameOver(dt)
+    for i, entity in ipairs(self.entities) do
+        if entity.state == "idle" then
+            entity.current_anim[entity.direction]:update(dt)
+        else
+            entity:update(dt, self.player)
+        end
+    end
+    if Mouse.mouse_button_down then
+        SceneManager:loadScene("game")
+    end
 end
 
 function GameScene:draw()
@@ -77,6 +91,16 @@ function GameScene:drawFighting()
     for i, entity in ipairs(self.entities) do
         entity:draw()
     end
+end
+
+function GameScene:drawGameOver()
+    self.map:draw()
+    for i, entity in ipairs(self.entities) do
+        entity:draw()
+    end
+    self.black_box:draw()
+    Text.printCentered("Game Over!", {255, 255, 255}, Screen.width/2, Screen.height/2-50, 3)
+    Text.printCentered("Click here the screen to play again", {255, 255, 255}, Screen.width/2, Screen.height/2+50, 1)
 end
 
 function GameScene:shouldTransition()
@@ -140,6 +164,21 @@ function GameScene:runCollisions()
                         entity:receiveDamage()
                     end
                 end
+            end
+        end
+    end
+end
+
+function GameScene:checkGameOver()
+    if self.player.hp <= 0 then
+        self.state = GameScene.states.gameover
+        self.updateFunction = self.updateGameOver
+        self.drawFunction = self.drawGameOver
+
+        for i, entity in ipairs(self.entities) do
+            if entity == self.player then
+                table.remove(self.entities, i)
+                break
             end
         end
     end
