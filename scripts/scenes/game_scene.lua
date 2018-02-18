@@ -17,7 +17,7 @@ function GameScene.new()
         entities={},
         black_box=StillImage.new("black_box.png", Screen.width/2, Screen.height/2, 0.5, 0.5),
 
-        timeSinceLevelLoad=0,
+        time_since_level_load=0,
         state=GameScene.states.clear,
         updateFunction=GameScene.updateClear,
         drawFunction=GameScene.drawClear,
@@ -27,7 +27,7 @@ function GameScene.new()
 end
 
 function GameScene:update(dt)
-    self.timeSinceLevelLoad = self.timeSinceLevelLoad + dt
+    self.time_since_level_load = self.time_since_level_load + dt
     self:updateFunction(dt)
 end
 
@@ -68,6 +68,13 @@ function GameScene:updateGameOver(dt)
     end
 end
 
+function GameScene:updateWin(dt)
+    self.player:update(dt)
+    if Mouse.mouse_button_down then
+        SceneManager:loadScene("game")
+    end
+end
+
 function GameScene:draw()
     self:drawFunction()
     HpBar.draw(self.player.hp)
@@ -96,6 +103,16 @@ function GameScene:drawGameOver()
     end
     self.black_box:draw()
     Text.printCentered("Game Over!", {255, 255, 255}, Screen.width/2, Screen.height/2-50, 3)
+    Text.printCentered("click anywhere to play again", {255, 255, 255}, Screen.width/2, Screen.height/2+50, 1)
+end
+
+function GameScene:drawWin()
+    self.map:draw()
+    self.player:draw()
+    self.black_box:draw()
+    Text.printCentered("You win!", {255, 255, 255}, Screen.width/2, Screen.height/2-50, 3)
+    Text.printCentered("Your time was: " .. math.floor(self.victory_time) .. " seconds!",
+                       {255, 255, 255}, Screen.width/2, Screen.height/2, 1)
     Text.printCentered("click anywhere to play again", {255, 255, 255}, Screen.width/2, Screen.height/2+50, 1)
 end
 
@@ -134,10 +151,16 @@ function GameScene:removeDeadEnemies()
     for i,enemy_to_remove in ipairs(dead_enemies) do
         table.remove(self.entities, enemy_to_remove)
     end
-    if #self.entities == 1 and self.entities[1] == self.player then
+    if #self.entities == 1 and self.entities[1] == self.player
+       and not self.map.rooms[self.map.current_room].boss then
         self.state = GameScene.states.clear
         self.updateFunction = self.updateClear
         self.drawFunction = self.drawClear
+    elseif #self.entities == 1 and self.entities[1] == self.player then
+        self.state = GameScene.states.win
+        self.updateFunction = self.updateWin
+        self.drawFunction = self.drawWin
+        self.victory_time = self.time_since_level_load
     end
 end
 
