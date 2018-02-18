@@ -42,12 +42,6 @@ function Player.new()
     t.dash_input = nil
     t.max_dash_velocity = 4000
 
-    -- Scenario limits
-    t.left_limit = 96
-    t.right_limit = Screen.width - 96
-    t.upper_limit = 96
-    t.lower_limit = Screen.height - 96
-
     -- Health
     t.hp = 3
 
@@ -174,20 +168,20 @@ function Player:updatePosition(dt)
     self.rect.y = self.rect.y + self.velocity.y * dt
 
     -- Check X limits
-    if self.rect:topLeft().x < self.left_limit then
-        self.rect.x = self.left_limit + self.rect.width*self.rect.pivotX
+    if self.rect:topLeft().x < Screen.left_bound then
+        self.rect.x = Screen.left_bound + self.rect.width*self.rect.pivotX
         self.velocity.x = 0
-    elseif self.rect:bottomRight().x > self.right_limit then
-        self.rect.x = self.right_limit - self.rect.width*(1-self.rect.pivotX)
+    elseif self.rect:bottomRight().x > Screen.right_bound then
+        self.rect.x = Screen.right_bound - self.rect.width*(1-self.rect.pivotX)
         self.velocity.x = 0
     end
 
     -- Check Y limits
-    if self.rect:topRight().y < self.upper_limit then
-        self.rect.y = self.upper_limit + self.rect.height*self.rect.pivotY
+    if self.rect:topRight().y < Screen.upper_bound then
+        self.rect.y = Screen.upper_bound + self.rect.height*self.rect.pivotY
         self.velocity.y = 0
-    elseif self.rect:bottomLeft().y > self.lower_limit then
-        self.rect.y = self.lower_limit - self.rect.height*(1-self.rect.pivotY)
+    elseif self.rect:bottomLeft().y > Screen.lower_bound then
+        self.rect.y = Screen.lower_bound - self.rect.height*(1-self.rect.pivotY)
         self.velocity.y = 0
     end
 end

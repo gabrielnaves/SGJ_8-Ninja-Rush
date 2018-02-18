@@ -9,16 +9,16 @@ function Kamaitachi.new()
 
     -- Animation data
     t.idle_anims = {
-        StillAnimation.new("kamaitachi/kama_idle_up.png", 4, 0.1, Screen.width/4, Screen.height/2, 0.5, 1),
-        StillAnimation.new("kamaitachi/kama_idle_down.png", 4, 0.1, Screen.width/4, Screen.height/2, 0.5, 1),
-        StillAnimation.new("kamaitachi/kama_idle_left.png", 4, 0.1, Screen.width/4, Screen.height/2, 0.5, 1),
-        StillAnimation.new("kamaitachi/kama_idle_right.png", 4, 0.1, Screen.width/4, Screen.height/2, 0.5, 1),
+        StillAnimation.new("kamaitachi/kama_idle_up.png", 4, 0.1, 0, 0, 0.5, 1),
+        StillAnimation.new("kamaitachi/kama_idle_down.png", 4, 0.1, 0, 0, 0.5, 1),
+        StillAnimation.new("kamaitachi/kama_idle_left.png", 4, 0.1, 0, 0, 0.5, 1),
+        StillAnimation.new("kamaitachi/kama_idle_right.png", 4, 0.1, 0, 0, 0.5, 1),
     }
     t.atk_anims = {
-        StillAnimation.new("kamaitachi/kama_idle_up.png", 4, 0.1, Screen.width/4, Screen.height/2, 0.5, 1),
-        StillAnimation.new("kamaitachi/kama_idle_down.png", 4, 0.1, Screen.width/4, Screen.height/2, 0.5, 1),
-        StillAnimation.new("kamaitachi/kama_idle_left.png", 4, 0.1, Screen.width/4, Screen.height/2, 0.5, 1),
-        StillAnimation.new("kamaitachi/kama_idle_right.png", 4, 0.1, Screen.width/4, Screen.height/2, 0.5, 1),
+        StillAnimation.new("kamaitachi/kama_atk_up.png", 10, 0.08, 0, 0, 0.5, 0.75),
+        StillAnimation.new("kamaitachi/kama_atk_down.png", 10, 0.08, 0, 0, 0.5, 0.75),
+        StillAnimation.new("kamaitachi/kama_atk_left.png", 10, 0.08, 0, 0, 0.5, 0.75),
+        StillAnimation.new("kamaitachi/kama_atk_right.png", 10, 0.08, 0, 0, 0.5, 0.75),
     }
     t.direction = Kamaitachi.directions.down
     t.current_anim = t.idle_anims
@@ -29,11 +29,17 @@ function Kamaitachi.new()
 
     -- Motion data
     t.rect = Rectangle.new(3*Screen.width/4, Screen.height/3, 30, 20, 0.5, 1)
-    t.attack_angle = 0
+    t.attack_speed = 1000
+    t.attack_vector = Vector.new(0, 0)
+    t.velocity = Vector.new(0, 0)
 
     -- Timers
     t.attack_cooldown = 2
+    t.attack_time = 0.4
     t.attack_timer = 0
+
+    -- Health
+    t.hp = 6
 
     return setmetatable(t, Kamaitachi.mt)
 end
@@ -57,6 +63,16 @@ function Kamaitachi:update(dt, player)
 end
 
 function Kamaitachi:updateIdle(dt, player)
+    self:lookAtPlayer(player)
+    self.current_anim[self.direction]:update(dt)
+    self.attack_timer = self.attack_timer + dt
+    if self.attack_timer > self.attack_cooldown then
+        self.attack_angle = angle
+        self:changeState(Kamaitachi.states.attacking, self.updateAttacking, self.atk_anims)
+    end
+end
+
+function Kamaitachi:lookAtPlayer(player)
     local player_pos = Vector.new(player.rect.x, player.rect.y)
     local current_pos = Vector.new(self.rect.x, self.rect.y)
     local angle = math.deg((player_pos - current_pos):angle())
@@ -69,16 +85,52 @@ function Kamaitachi:updateIdle(dt, player)
     else
         self.direction = Kamaitachi.directions.left
     end
-    self.current_anim[self.direction]:update(dt)
-    self.attack_timer = self.attack_timer + dt
-    if self.attack_timer > self.attack_cooldown then
-        self.attack_angle = angle
-        self:changeState(Kamaitachi.states.attacking, self.updateAttacking, self.atk_anims)
+    self.attack_vector = player_pos - current_pos
+end
+
+function Kamaitachi:updateAttacking(dt, player)
+    self:synchronizeAnimation()
+    if self.current_anim[self.direction].current_frame < self.current_anim[self.direction].frame_count then
+        self:lookAtPlayer(player)
+        self.current_anim[self.direction]:update(dt)
+    else
+        self.velocity = self.attack_vector:normalized() * self.attack_speed
+        self:updatePosition(dt)
+        self.attack_timer = self.attack_timer + dt
+        if self.attack_timer > self.attack_time then
+            self:changeState(Kamaitachi.states.idle, self.updateIdle, self.idle_anims)
+        end
     end
 end
 
-function Kamaitachi.updateAttacking(dt, player)
+function Kamaitachi:synchronizeAnimation()
+    for i, anim in ipairs(self.current_anim) do
+        anim.frame_timer = self.current_anim[self.direction].frame_timer
+        anim.current_frame = self.current_anim[self.direction].current_frame
+    end
+end
 
+function Kamaitachi:updatePosition(dt)
+    self.rect.x = self.rect.x + self.velocity.x * dt
+    self.rect.y = self.rect.y + self.velocity.y * dt
+
+    -- Check X limits
+    if self.rect:topLeft().x < Screen.left_bound then
+        self.rect.x = Screen.left_bound + self.rect.width*self.rect.pivotX
+        self.velocity.x = 0
+    elseif self.rect:bottomRight().x > Screen.right_bound then
+        self.rect.x = Screen.right_bound - self.rect.width*(1-self.rect.pivotX)
+        self.velocity.x = 0
+    end
+
+    -- Check Y limits
+    if self.rect:topRight().y < Screen.upper_bound then
+        self.rect.y = Screen.upper_bound + self.rect.height*self.rect.pivotY
+        self.velocity.y = 0
+    elseif self.rect:bottomLeft().y > Screen.lower_bound then
+        self.rect.y = Screen.lower_bound - self.rect.height*(1-self.rect.pivotY)
+        self.velocity.y = 0
+    end
 end
 
 function Kamaitachi:draw()

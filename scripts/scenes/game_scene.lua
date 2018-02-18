@@ -63,7 +63,7 @@ function GameScene:drawTransitioning()
 end
 
 function GameScene:shouldTransition()
-    return self.state == GameScene.states.clear and self.player.rect:topLeft().y == self.player.upper_limit
+    return self.state == GameScene.states.clear and self.player.rect:topLeft().y == Screen.upper_bound
            and self.player.rect.x > Screen.width/2-40 and self.player.rect.x < Screen.width/2+40
            and self.map:canTransition()
 end
@@ -77,7 +77,7 @@ end
 
 function GameScene:endTransition()
     self.player.rect.x = Screen.width/2
-    self.player.rect.y = self.player.lower_limit - self.player.rect.height*(1-self.player.rect.pivotY)
+    self.player.rect.y = Screen.lower_bound - self.player.rect.height*(1-self.player.rect.pivotY)
     self.player.velocity = Vector.new(0, 0)
 
     self.state = GameScene.states.clear
