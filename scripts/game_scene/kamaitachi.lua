@@ -1,7 +1,7 @@
 Kamaitachi = {}
 Kamaitachi.mt = { __index=Kamaitachi }
 
-Kamaitachi.states = { idle="idle", preparing_attack="preparing attack", attacking="attacking" }
+Kamaitachi.states = { idle="idle", attacking="attacking", dead="dead" }
 Kamaitachi.directions = { up=1, down=2, left=3, right=4 }
 
 function Kamaitachi.new()
@@ -9,6 +9,12 @@ function Kamaitachi.new()
 
     -- Animation data
     t.idle_anims = {
+        StillAnimation.new("kamaitachi/kama_idle_up.png", 4, 0.1, Screen.width/4, Screen.height/2, 0.5, 1),
+        StillAnimation.new("kamaitachi/kama_idle_down.png", 4, 0.1, Screen.width/4, Screen.height/2, 0.5, 1),
+        StillAnimation.new("kamaitachi/kama_idle_left.png", 4, 0.1, Screen.width/4, Screen.height/2, 0.5, 1),
+        StillAnimation.new("kamaitachi/kama_idle_right.png", 4, 0.1, Screen.width/4, Screen.height/2, 0.5, 1),
+    }
+    t.atk_anims = {
         StillAnimation.new("kamaitachi/kama_idle_up.png", 4, 0.1, Screen.width/4, Screen.height/2, 0.5, 1),
         StillAnimation.new("kamaitachi/kama_idle_down.png", 4, 0.1, Screen.width/4, Screen.height/2, 0.5, 1),
         StillAnimation.new("kamaitachi/kama_idle_left.png", 4, 0.1, Screen.width/4, Screen.height/2, 0.5, 1),
@@ -23,6 +29,11 @@ function Kamaitachi.new()
 
     -- Motion data
     t.rect = Rectangle.new(3*Screen.width/4, Screen.height/3, 30, 20, 0.5, 1)
+    t.attack_angle = 0
+
+    -- Timers
+    t.attack_cooldown = 2
+    t.attack_timer = 0
 
     return setmetatable(t, Kamaitachi.mt)
 end
@@ -32,6 +43,7 @@ function Kamaitachi:changeState(state, updateFunction, anim)
     self.state = state
     self.updateFunction = updateFunction
     self.current_anim = anim
+    self.attack_timer = 0
 end
 
 function Kamaitachi:resetAnimations(anims)
@@ -58,6 +70,15 @@ function Kamaitachi:updateIdle(dt, player)
         self.direction = Kamaitachi.directions.left
     end
     self.current_anim[self.direction]:update(dt)
+    self.attack_timer = self.attack_timer + dt
+    if self.attack_timer > self.attack_cooldown then
+        self.attack_angle = angle
+        self:changeState(Kamaitachi.states.attacking, self.updateAttacking, self.atk_anims)
+    end
+end
+
+function Kamaitachi.updateAttacking(dt, player)
+
 end
 
 function Kamaitachi:draw()
