@@ -40,10 +40,22 @@ function Kamaitachi.new()
     t.attack_time = 0.4
     t.attack_timer = 0
 
+    t.hit_time = 0.4
+    t.hit_timer = t.hit_time
+    t.blink_time = 0.2
+    t.blink_timer = 0
+
     -- Health
     t.hp = 6
 
     return setmetatable(t, Kamaitachi.mt)
+end
+
+function Kamaitachi:receiveDamage()
+    if self.hit_timer > self.hit_time then
+        self.hit_timer = 0
+        self.hp = self.hp - 1
+    end
 end
 
 function Kamaitachi:changeState(state, updateFunction, anim)
@@ -61,6 +73,9 @@ function Kamaitachi:resetAnimations(anims)
 end
 
 function Kamaitachi:update(dt, player)
+    self.hit_timer = self.hit_timer + dt
+    self.blink_timer = self.blink_timer + dt
+    if self.blink_timer > self.blink_time then self.blink_timer = 0 end
     self:updateFunction(dt, player)
 end
 
@@ -138,7 +153,11 @@ end
 
 function Kamaitachi:draw()
     self:updateAnimationPositions()
-    self.current_anim[self.direction]:draw()
+    if self.hit_timer > self.hit_time then
+        self.current_anim[self.direction]:draw()
+    elseif self.blink_timer > self.blink_time/2 then
+        self.current_anim[self.direction]:draw()
+    end
 end
 
 function Kamaitachi:updateAnimationPositions()
