@@ -8,7 +8,7 @@ local GameScene = {}
 GameScene.name = "game"
 GameScene.mt = { __index=GameScene }
 GameScene.states = { clear="clear", transitioning="transitioning", fighting="fighting",
-                     gameover="gameover" }
+                     gameover="gameover", win="win" }
 
 function GameScene.new()
     local t = {

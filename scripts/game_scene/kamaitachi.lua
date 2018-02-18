@@ -1,7 +1,7 @@
 Kamaitachi = {}
 Kamaitachi.mt = { __index=Kamaitachi }
 
-Kamaitachi.states = { idle="idle", attacking="attacking", dead="dead" }
+Kamaitachi.states = { idle="idle", attacking="attacking" }
 Kamaitachi.directions = { up=1, down=2, left=3, right=4 }
 
 function Kamaitachi.new()
@@ -90,8 +90,8 @@ function Kamaitachi:updateIdle(dt, player)
 end
 
 function Kamaitachi:lookAtPlayer(player)
-    local player_pos = Vector.new(player.rect.x, player.rect.y)
-    local current_pos = Vector.new(self.rect.x, self.rect.y)
+    local player_pos = player.rect:position()
+    local current_pos = self.rect:position()
     local angle = math.deg((player_pos - current_pos):angle())
     if math.abs(angle) <= 45 then
         self.direction = Kamaitachi.directions.right

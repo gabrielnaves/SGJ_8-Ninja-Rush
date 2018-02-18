@@ -45,6 +45,10 @@ function Rectangle.new(x, y, width, height, pivotX, pivotY)
     return setmetatable(t, mt)
 end
 
+function Rectangle:position()
+    return Vector.new(self.x, self.y)
+end
+
 function Rectangle:topLeft()
     return Vector.new(self.x - self.width*self.pivotX, self.y - self.height*self.pivotY)
 end
