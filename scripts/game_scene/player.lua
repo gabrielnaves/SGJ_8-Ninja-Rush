@@ -39,6 +39,8 @@ function Player.new()
     t.max_velocity = 300
     t.max_accel = 1000
     t.vel_decay = 0.85
+    t.dash_input = nil
+    t.max_dash_velocity = 4000
 
     -- Scenario limits
     t.left_limit = 96
@@ -50,9 +52,13 @@ function Player.new()
     t.hp = 3
 
     -- Timers
-    t.attack_time = 0.04*10
     t.attack_cooldown = 0.2
+    t.attack_time = 0.04*10
     t.attack_timer = 0
+
+    t.dash_cooldown = 1
+    t.dash_time = 0.05
+    t.dash_timer = 0
 
     return setmetatable(t, Player.mt)
 end
@@ -66,6 +72,7 @@ end
 
 function Player:update(dt)
     self.attack_timer = self.attack_timer + dt
+    self.dash_timer = self.dash_timer + dt
     self:updateDirection(dt)
     self:updateFunction(dt)
     self:updateMotion(dt)
@@ -113,6 +120,10 @@ function Player:updateMoving(dt)
     if Input.attack_button and self.attack_timer > self.attack_cooldown then
         self:changeState(Player.states.attacking, self.updateAttacking, self.atk_anims)
         self.attack_timer = 0
+    elseif Input.dash_button and self.dash_timer > self.dash_cooldown and input:magnitude() > 0.0001 then
+        self.dash_input = input
+        self:changeState(Player.states.dashing, self.updateDashing, self.mov_anims)
+        self.dash_timer = 0
     end
 end
 
@@ -125,25 +136,36 @@ function Player:updateAttacking(dt)
     end
 end
 
+function Player:updateDashing(dt)
+    self.current_anim[self.direction]:update(dt)
+    self.velocity = self.dash_input * self.max_dash_velocity
+    if self.dash_timer > self.dash_time then
+        self.dash_timer = 0
+        self:changeState(Player.states.idle, self.updateIdle, self.idle_anims)
+    end
+end
+
 function Player:updateMotion(dt)
     self:updateVelocity(dt)
     self:updatePosition(dt)
 end
 
 function Player:updateVelocity(dt)
-    if self.acceleration.x ~= 0 then
-        self.velocity.x = self.velocity.x + self.acceleration.x * dt
-    else
-        self.velocity.x = self.velocity.x * self.vel_decay
-    end
-    if self.acceleration.y ~= 0 then
-        self.velocity.y = self.velocity.y + self.acceleration.y * dt
-    else
-        self.velocity.y = self.velocity.y * self.vel_decay
-    end
+    if self.state ~= Player.states.dashing then
+        if self.acceleration.x ~= 0 then
+            self.velocity.x = self.velocity.x + self.acceleration.x * dt
+        else
+            self.velocity.x = self.velocity.x * self.vel_decay
+        end
+        if self.acceleration.y ~= 0 then
+            self.velocity.y = self.velocity.y + self.acceleration.y * dt
+        else
+            self.velocity.y = self.velocity.y * self.vel_decay
+        end
 
-    if self.velocity:magnitude() > self.max_velocity then
-        self.velocity = self.velocity:normalized() * self.max_velocity
+        if self.velocity:magnitude() > self.max_velocity then
+            self.velocity = self.velocity:normalized() * self.max_velocity
+        end
     end
 end
 
