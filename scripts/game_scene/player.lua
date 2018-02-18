@@ -47,7 +47,6 @@ function Player.new()
 
     -- Timers
     t.attack_cooldown = 0.2
-    t.attack_time = 0.04*10
     t.attack_timer = 0
 
     t.dash_cooldown = 1
@@ -146,7 +145,7 @@ end
 function Player:updateAttacking(dt)
     self.acceleration = Vector.new(0, 0)
     self.current_anim[self.direction]:update(dt)
-    if self.attack_timer > self.attack_time then
+    if self.current_anim[self.direction].current_frame == self.current_anim[self.direction].frame_count then
         self.attack_timer = 0
         self:changeState(Player.states.idle, self.updateIdle, self.idle_anims)
     end
