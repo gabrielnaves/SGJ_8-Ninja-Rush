@@ -18,8 +18,12 @@ function EnemySpawner.spawnKamaitachiBoss(entityTable)
     dark_kamaitachi.rect.x, dark_kamaitachi.rect.y = 2*Screen.width/6, Screen.height/4
     table.insert(entityTable, dark_kamaitachi)
 
+    dark_kamaitachi = DarkKamaitachi.new()
+    dark_kamaitachi.rect.x, dark_kamaitachi.rect.y = 4*Screen.width/6, Screen.height/4
+    table.insert(entityTable, dark_kamaitachi)
+
     local light_kamaitachi = LightKamaitachi.new()
-    light_kamaitachi.rect.x, light_kamaitachi.rect.y = 4*Screen.width/6, Screen.height/4
+    light_kamaitachi.rect.x, light_kamaitachi.rect.y = 3*Screen.width/6, Screen.height/4
     table.insert(entityTable, light_kamaitachi)
 end
 

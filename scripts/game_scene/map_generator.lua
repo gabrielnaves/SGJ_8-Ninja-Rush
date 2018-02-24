@@ -69,15 +69,11 @@ function Room.new(i, rooms)
 
     -- Door generation
     room.doors = {}
-    if i == MapGenerator.room_amount then
-        room.doors.down = StillImage.new("doors/boss_door_up.png", Screen.width/2, Screen.height, 0.5, 1)
-    elseif i > 1 then
+    if i > 1 then
         room.doors.down = StillImage.new("doors/door_up.png", Screen.width/2, Screen.height, 0.5, 1)
     end
-    if i == MapGenerator.room_amount-1 then
+    if i < MapGenerator.room_amount then
         room.doors.up = StillImage.new("doors/boss_door_down.png", Screen.width/2, 0, 0.5, 0)
-    elseif i < MapGenerator.room_amount-1 then
-        room.doors.up = StillImage.new("doors/door_down.png", Screen.width/2, 0, 0.5, 0)
     end
 
     return setmetatable(room, Room.mt)
