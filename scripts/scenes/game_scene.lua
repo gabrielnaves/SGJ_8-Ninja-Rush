@@ -2,6 +2,7 @@ require("scripts.game_scene.player")
 require("scripts.game_scene.map_generator")
 require("scripts.game_scene.hp_bar")
 require("scripts.game_scene.enemy_spawner")
+require("scripts.game_scene.music_manager")
 
 local GameScene = {}
 
@@ -16,6 +17,8 @@ function GameScene.new()
         map=MapGenerator.new(),
         entities={},
         black_box=StillImage.new("black_box.png", Screen.width/2, Screen.height/2, 0.5, 0.5),
+
+        music_manager = MusicManager.new(),
 
         time_since_level_load=0,
         state=GameScene.states.clear,
@@ -227,6 +230,7 @@ function GameScene:checkGameOver()
         self.state = GameScene.states.gameover
         self.updateFunction = self.updateGameOver
         self.drawFunction = self.drawGameOver
+        self.music_manager:stopAll()
 
         for i, entity in ipairs(self.entities) do
             if entity == self.player then
