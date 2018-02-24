@@ -1,4 +1,4 @@
-require("scripts.game_scene.kamaitachi")
+require("scripts.game_scene.dark_kamaitachi")
 require("scripts.game_scene.gashadokuro")
 
 EnemySpawner = {}
@@ -6,7 +6,7 @@ EnemySpawner = {}
 function EnemySpawner.spawnEnemies(entityTable, room)
     if not room.boss then
         for i=1,room.count do
-            local new_enemy = Kamaitachi.new()
+            local new_enemy = DarkKamaitachi.new()
             new_enemy.rect.x, new_enemy.rect.y = EnemySpawner.randomPosition()
             table.insert(entityTable, new_enemy)
         end

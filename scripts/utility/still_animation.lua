@@ -1,7 +1,7 @@
 StillAnimation = {}
 StillAnimation.mt = {__index=StillAnimation}
 
-function StillAnimation.new(img_name, frame_count, frame_time, x, y, pivotX, pivotY)
+function StillAnimation.new(img_name, frame_count, frame_time, x, y, pivotX, pivotY, loop)
     -- Default value settings
     frame_count = frame_count or 1
     frame_time = frame_time or 1
@@ -9,6 +9,7 @@ function StillAnimation.new(img_name, frame_count, frame_time, x, y, pivotX, piv
     y = y or 0.0
     pivotX = pivotX or 0.0
     pivotY = pivotY or 0.0
+    if loop == nil then loop = true end
 
     -- Image setup
     local image = love.graphics.newImage('assets/' .. img_name)
@@ -34,16 +35,28 @@ function StillAnimation.new(img_name, frame_count, frame_time, x, y, pivotX, piv
         pivotY = pivotY,
         width = frame_width,
         height = frame_height,
+
+        loop = loop,
+        ended = false,
     }
     return setmetatable(instance, StillAnimation.mt)
 end
 
 function StillAnimation:update(dt)
-    self.frame_timer = self.frame_timer + dt
-    if self.frame_timer > self.frame_time then
-        self.frame_timer = 0
-        self.current_frame = self.current_frame + 1
-        if self.current_frame > self.frame_count then self.current_frame = 1 end
+    if self.loop or not self.ended then
+        self.frame_timer = self.frame_timer + dt
+        if self.frame_timer > self.frame_time then
+            self.frame_timer = 0
+            self.current_frame = self.current_frame + 1
+            if self.current_frame > self.frame_count then
+                if self.loop then
+                    self.current_frame = 1
+                else
+                    self.ended = true
+                    self.current_frame = self.frame_count
+                end
+            end
+        end
     end
 end
 
@@ -56,4 +69,5 @@ end
 function StillAnimation:reset()
     self.current_frame = 1
     self.frame_timer = 0
+    self.ended = false
 end
