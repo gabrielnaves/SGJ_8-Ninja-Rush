@@ -43,6 +43,7 @@ end
 
 function GameScene:updateClear(dt)
     self.player:update(dt)
+    self.map.rooms[self.map.current_room]:update(dt)
     if self:shouldTransition() then
         self:startTransition()
     end

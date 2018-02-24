@@ -37,8 +37,8 @@ function Player.new()
     t.velocity = Vector.new(0, 0)
     t.acceleration = Vector.new(0, 0)
     t.max_velocity = 400
-    t.max_accel = 1000
-    t.vel_decay = 0.85
+    t.max_accel = 2000
+    t.vel_decay = 0.6
     t.dash_input = nil
     t.max_dash_velocity = 4000
 
