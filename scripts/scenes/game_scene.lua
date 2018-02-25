@@ -132,8 +132,13 @@ function GameScene:drawWin()
     self.player:draw()
     self.black_box:draw()
     Text.printCentered("You win!", {255, 255, 255}, Screen.width/2, Screen.height/2-50, 3)
-    Text.printCentered("Your time was: " .. math.floor(self.victory_time) .. " seconds!",
-                       {255, 255, 255}, Screen.width/2, Screen.height/2, 1)
+    if GODMODE then
+        Text.printCentered("God mode is on, time not recorded",
+                           {255, 255, 255}, Screen.width/2, Screen.height/2, 1)
+    else
+        Text.printCentered("Your time was: " .. math.floor(self.victory_time) .. " seconds!",
+                           {255, 255, 255}, Screen.width/2, Screen.height/2, 1)
+    end
     Text.printCentered("click anywhere to play again", {255, 255, 255}, Screen.width/2, Screen.height/2+50, 1)
 end
 

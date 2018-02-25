@@ -69,7 +69,7 @@ function Player:changeState(state, updateFunction, anim)
 end
 
 function Player:receiveDamage(enemy)
-    if self.hit_timer > self.hit_time then
+    if self.hit_timer > self.hit_time and not GODMODE then
         self.hit_timer = 0
         self.hp = self.hp - 1
         local current_pos = Vector.new(self.rect.x, self.rect.y)
