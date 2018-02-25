@@ -1,7 +1,7 @@
 MapGenerator = {}
 MapGenerator.mt = { __index=MapGenerator }
 
-MapGenerator.room_amount = 4
+MapGenerator.room_amount = 5
 
 function MapGenerator.new()
     local map = {}

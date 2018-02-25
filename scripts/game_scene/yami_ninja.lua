@@ -44,6 +44,8 @@ function YamiNinja.new()
     -- Timers
     t.attack_cooldown = SceneManager.current_scene.music_manager.loop_time/2
     t.attack_timer = 0
+    t.ult_cooldown = 4*t.attack_cooldown
+    t.ult_timer = 0
 
     t.hit_time = 0.8
     t.hit_timer = t.hit_time
@@ -95,8 +97,13 @@ function YamiNinja:updateFixedTimers(dt, player)
 
     self.attack_timer = self.attack_timer + dt
     if self.attack_timer > self.attack_cooldown then
-        self.attack_timer = 0
+        self.attack_timer = self.attack_timer - self.attack_cooldown
         self:throwShuriken(player)
+    end
+    self.ult_timer = self.ult_timer + dt
+    if self.ult_timer > self.ult_cooldown then
+        self.ult_timer = self.ult_timer - self.ult_cooldown
+        self:ult()
     end
 end
 
@@ -196,17 +203,29 @@ function YamiNinja:throwShuriken(player)
     table.insert(self.projectiles, shuriken)
 end
 
+function YamiNinja:ult()
+    local shuriken = nil
+    for i=0,330,30 do
+        shuriken = Shuriken.new(self.rect.x, self.rect.y - self.rect.height/2,
+                                Vector.fromPolar(1, math.rad(i)))
+        table.insert(self.projectiles, shuriken)
+    end
+end
+
 function YamiNinja:updateProjectiles(dt, player)
-    local remove_list = {}
     for i,projectile in ipairs(self.projectiles) do
         projectile:update(dt, player)
-        if projectile.rect.x > Screen.right_bound or projectile.rect.x < Screen.left_bound or
-           projectile.rect.y > Screen.lower_bound or projectile.rect.y < Screen.upper_bound then
-            table.insert(remove_list, i)
-        end
     end
-    for i=#remove_list,1,-1 do
-        table.remove(self.projectiles, i)
+    local index = 1
+    while index <= #self.projectiles do
+        if self.projectiles[index].rect.x > Screen.right_bound or
+           self.projectiles[index].rect.x < Screen.left_bound or
+           self.projectiles[index].rect.y > Screen.lower_bound or
+           self.projectiles[index].rect.y < Screen.upper_bound then
+            table.remove(self.projectiles, index)
+        else
+            index = index + 1
+        end
     end
 end
 
