@@ -11,17 +11,17 @@ function Gashadokuro.new(size)
     if size == "big" then
         t.image = StillImage.new("gashadokuro/gashadokuro_big.png", x, y, 0.5, 1)
         t.rect = Rectangle.new(x, y, 60, 40, 0.5, 1)
-        t.hp = love.math.random(10, 14)
+        t.hp = love.math.random(6, 10)
         t.max_speed = Mathf.randomFloat(120, 220)
     elseif size == "medium" then
         t.image = StillImage.new("gashadokuro/gashadokuro_med.png", x, y, 0.5, 1)
         t.rect = Rectangle.new(x, y, 30, 20, 0.5, 1)
-        t.hp = love.math.random(7, 10)
+        t.hp = love.math.random(4, 6)
         t.max_speed = Mathf.randomFloat(180, 280)
     else
         t.image = StillImage.new("gashadokuro/gashadokuro_small.png", x, y, 0.5, 1)
         t.rect = Rectangle.new(x, y, 15, 10, 0.5, 1)
-        t.hp = love.math.random(3, 7)
+        t.hp = love.math.random(2, 4)
         t.max_speed = Mathf.randomFloat(240, 360)
     end
 
@@ -38,10 +38,13 @@ function Gashadokuro.new(size)
     return setmetatable(t, Gashadokuro.mt)
 end
 
-function Gashadokuro:receiveDamage()
+function Gashadokuro:receiveDamage(player)
     if self.hit_timer > self.hit_time then
         self.hit_timer = 0
         self.hp = self.hp - 1
+
+        self.angle = (self.rect:position()-player.rect:position()):angle()
+
         if self.hp == 0 and self.size ~= "small" then
             local entities = SceneManager.current_scene.entities
             if self.size == "big" then
