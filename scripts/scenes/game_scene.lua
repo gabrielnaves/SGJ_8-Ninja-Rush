@@ -207,27 +207,27 @@ function GameScene:runCollisions()
                     if entity.rect.y < self.player.rect.y and entity.rect.y > self.player.rect.y - 100
                        and entity.rect.x > self.player.rect.x-40
                        and entity.rect.x < self.player.rect.x+40 then
-                        entity:receiveDamage()
+                        entity:receiveDamage(self.player)
                     end
                 elseif self.player.direction == Player.directions.down then
                     if entity.rect.y > self.player.rect.y and entity.rect.y < self.player.rect.y + 70
                        and entity.rect.x > self.player.rect.x-40
                        and entity.rect.x < self.player.rect.x+40 then
-                        entity:receiveDamage()
+                        entity:receiveDamage(self.player)
                     end
                 elseif self.player.direction == Player.directions.left then
                     if entity.rect.y < self.player.rect.y+10
                        and entity.rect.y > self.player.rect.y-40
                        and entity.rect.x < self.player.rect.x
                        and entity.rect.x > self.player.rect.x - 100 then
-                        entity:receiveDamage()
+                        entity:receiveDamage(self.player)
                     end
                 elseif self.player.direction == Player.directions.right then
                     if entity.rect.y < self.player.rect.y+10
                        and entity.rect.y > self.player.rect.y-40
                        and entity.rect.x > self.player.rect.x
                        and entity.rect.x < self.player.rect.x + 100 then
-                        entity:receiveDamage()
+                        entity:receiveDamage(self.player)
                     end
                 end
             end
