@@ -204,29 +204,23 @@ function GameScene:runCollisionsBetweenEntities()
             end
             if self.player.state == Player.states.attacking then
                 if self.player.direction == Player.directions.up then
-                    if entity.rect.y < self.player.rect.y and entity.rect.y > self.player.rect.y - 100
-                       and entity.rect.x > self.player.rect.x-40
-                       and entity.rect.x < self.player.rect.x+40 then
+                    local attackBox = Rectangle.new(self.player.rect.x, self.player.rect.y, 50, 70, 0.5, 1)
+                    if attackBox:overlapping(entity.rect) then
                         entity:receiveDamage(self.player)
                     end
                 elseif self.player.direction == Player.directions.down then
-                    if entity.rect.y > self.player.rect.y and entity.rect.y < self.player.rect.y + 70
-                       and entity.rect.x > self.player.rect.x-40
-                       and entity.rect.x < self.player.rect.x+40 then
+                    local attackBox = Rectangle.new(self.player.rect.x, self.player.rect.y, 50, 40, 0.5, 0)
+                    if attackBox:overlapping(entity.rect) then
                         entity:receiveDamage(self.player)
                     end
                 elseif self.player.direction == Player.directions.left then
-                    if entity.rect.y < self.player.rect.y+10
-                       and entity.rect.y > self.player.rect.y-40
-                       and entity.rect.x < self.player.rect.x
-                       and entity.rect.x > self.player.rect.x - 100 then
+                    local attackBox = Rectangle.new(self.player.rect.x, self.player.rect.y, 70, 20, 1, 0.9)
+                    if attackBox:overlapping(entity.rect) then
                         entity:receiveDamage(self.player)
                     end
                 elseif self.player.direction == Player.directions.right then
-                    if entity.rect.y < self.player.rect.y+10
-                       and entity.rect.y > self.player.rect.y-40
-                       and entity.rect.x > self.player.rect.x
-                       and entity.rect.x < self.player.rect.x + 100 then
+                    local attackBox = Rectangle.new(self.player.rect.x, self.player.rect.y, 70, 20, 0, 0.9)
+                    if attackBox:overlapping(entity.rect) then
                         entity:receiveDamage(self.player)
                     end
                 end
