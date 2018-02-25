@@ -39,10 +39,10 @@ function YamiNinja.new()
     t.proximity = 200
 
     -- Health
-    t.hp = 10
+    t.hp = 6
 
     -- Timers
-    t.attack_cooldown = SceneManager.current_scene.music_manager.loop_time/2
+    t.attack_cooldown = SceneManager.current_scene.music_manager.loop_time
     t.attack_timer = 0
     t.ult_cooldown = 4*t.attack_cooldown
     t.ult_timer = 0
