@@ -10,6 +10,10 @@ MusicManager.tracks = {
     { src=love.audio.newSource("assets/music/Piano 1.ogg", "static"), vol=0.4 },
     { src=love.audio.newSource("assets/music/Flute 1.ogg", "static"), vol=1 },
     { src=love.audio.newSource("assets/music/Flute 2.ogg", "static"), vol=1 },
+    { src=love.audio.newSource("assets/music/Flute 3.ogg", "static"), vol=1 },
+    { src=love.audio.newSource("assets/music/Flute 4.ogg", "static"), vol=1 },
+    { src=love.audio.newSource("assets/music/Saxophone 1.ogg", "static"), vol=1 },
+    { src=love.audio.newSource("assets/music/Saxophone 2.ogg", "static"), vol=1 },
 }
 
 MusicManager.loop_time = MusicManager.tracks[1].src:getDuration()
@@ -113,16 +117,7 @@ function MusicManager:stage3Music()
 end
 
 function MusicManager:stage4Music()
-    if self.requested_change then
-        self.loop_count = 0
-    end
-    self.loop_count = self.loop_count + 1
-
-    local tracks_to_play = { 1, 2, 5, 6 }
-
-    if self.loop_count == 1 then table.insert(tracks_to_play, 7) end
-    if self.loop_count == 2 then table.insert(tracks_to_play, 8) end
-    if self.loop_count == 4 then self.loop_count = 0 end
+    local tracks_to_play = { 1, 2, 5, 6, 11 }
 
     for i=1,#tracks_to_play do
         self.tracks[tracks_to_play[i]].src:setVolume(self.tracks[tracks_to_play[i]].vol)
@@ -135,12 +130,16 @@ function MusicManager:stage5Music()
     end
     self.loop_count = self.loop_count + 1
 
-    local tracks_to_play = { 1, 2, 5, 6 }
+    local tracks_to_play = nil
+    if self.loop_count == 1 then
+        tracks_to_play = { 3, 4, 12 }
+    else
+        tracks_to_play = { 1, 2, 3, 5, 6 }
 
-    if self.loop_count == 1 then table.insert(tracks_to_play, 7) end
-    if self.loop_count == 2 then table.insert(tracks_to_play, 8) end
-    if self.loop_count == 4 then self.loop_count = 0 end
-
+        if self.loop_count == 2 then table.insert(tracks_to_play, 9) end
+        if self.loop_count == 3 then table.insert(tracks_to_play, 10) end
+        if self.loop_count == 6 then self.loop_count = 1 end
+    end
     for i=1,#tracks_to_play do
         self.tracks[tracks_to_play[i]].src:setVolume(self.tracks[tracks_to_play[i]].vol)
     end
