@@ -2,7 +2,7 @@ echo off
 rem Batch file to package a love game for windows automatically
 rem ---
 rem Output file name can be sent as %1 command-line argument,
-rem default output file is game.zip
+rem default output file is ninja_rush.zip
 rem output is always located in bin\ folder
 rem ---
 rem Requires make-exe-file.bat
@@ -13,10 +13,10 @@ setlocal
 
 rem Variables
 set love_dll_folder=bin\love-dlls\
-set generated_exe_file=bin\love-dlls\game.exe
+set generated_exe_file=bin\love-dlls\ninja_rush.exe
 
 set file_name=%1
-if "%1"=="" (set file_name=game.zip)
+if "%1"=="" (set file_name=ninja_rush.zip)
 
 rem Remove .zip file if it exists
 if exist bin\%file_name% (
@@ -34,7 +34,7 @@ call make-exe-file.bat %generated_exe_file%
 
 rem Look for .love file on expected output location
 if not exist %generated_exe_file% (
-    echo game.exe file not found in bin folder!
+    echo ninja_rush.exe file not found in bin folder!
     pause
     exit
 )
