@@ -43,6 +43,10 @@ function GameScene:update(dt)
             self.paused = false
         end
     end
+    if love.keyboard.isDown("escape") then
+        self.music_manager:stopAll()
+        SceneManager:loadScene("menu")
+    end
 end
 
 function GameScene:updateClear(dt)
