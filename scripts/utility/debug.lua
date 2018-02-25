@@ -4,7 +4,7 @@ function Debug.log(msg)
     print(msg)
 end
 
-function Debug.logPosition(x, y)
+function Debug.logVector(x, y)
     print('x: ' .. x .. ' | y: ' .. y)
 end
 

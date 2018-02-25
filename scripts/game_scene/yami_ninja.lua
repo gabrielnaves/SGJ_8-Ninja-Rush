@@ -1,6 +1,9 @@
+require("scripts.game_scene.shuriken")
+
 YamiNinja = {}
 YamiNinja.mt = { __index=YamiNinja }
 
+YamiNinja.name = "yami ninja"
 YamiNinja.states = { idle='idle', moving='moving' }
 YamiNinja.directions = { up=1, down=2, left=3, right=4 }
 
@@ -39,7 +42,7 @@ function YamiNinja.new()
     t.hp = 10
 
     -- Timers
-    t.attack_cooldown = 2
+    t.attack_cooldown = SceneManager.current_scene.music_manager.loop_time/2
     t.attack_timer = 0
 
     t.hit_time = 0.8
@@ -79,13 +82,13 @@ function YamiNinja:resetAnimations()
 end
 
 function YamiNinja:update(dt, player)
-    self:updateFixedTimers(dt)
+    self:updateFixedTimers(dt, player)
     self:updateFunction(dt, player)
+    self:updateProjectiles(dt, player)
     self:updateMotion(dt)
-    self:updateProjectiles(dt)
 end
 
-function YamiNinja:updateFixedTimers(dt)
+function YamiNinja:updateFixedTimers(dt, player)
     self.hit_timer = self.hit_timer + dt
     self.blink_timer = self.blink_timer + dt
     if self.blink_timer > self.blink_time then self.blink_timer = 0 end
@@ -93,7 +96,7 @@ function YamiNinja:updateFixedTimers(dt)
     self.attack_timer = self.attack_timer + dt
     if self.attack_timer > self.attack_cooldown then
         self.attack_timer = 0
-        self:throwShuriken()
+        self:throwShuriken(player)
     end
 end
 
@@ -187,12 +190,24 @@ function YamiNinja:updatePosition(dt)
     end
 end
 
-function YamiNinja:throwShuriken()
-    -- TODO
+function YamiNinja:throwShuriken(player)
+    local shuriken = Shuriken.new(self.rect.x, self.rect.y - self.rect.height/2,
+                                  player.rect:position()-self.rect:position())
+    table.insert(self.projectiles, shuriken)
 end
 
-function YamiNinja:updateProjectiles(dt)
-    -- TODO
+function YamiNinja:updateProjectiles(dt, player)
+    local remove_list = {}
+    for i,projectile in ipairs(self.projectiles) do
+        projectile:update(dt, player)
+        if projectile.rect.x > Screen.right_bound or projectile.rect.x < Screen.left_bound or
+           projectile.rect.y > Screen.lower_bound or projectile.rect.y < Screen.upper_bound then
+            table.insert(remove_list, i)
+        end
+    end
+    for i=#remove_list,1,-1 do
+        table.remove(self.projectiles, i)
+    end
 end
 
 function YamiNinja:draw()
@@ -201,6 +216,9 @@ function YamiNinja:draw()
         self.current_anim[self.direction]:draw()
     elseif self.blink_timer > self.blink_time / 2 then
         self.current_anim[self.direction]:draw()
+    end
+    for i,projectile in ipairs(self.projectiles) do
+        projectile:draw()
     end
 end
 

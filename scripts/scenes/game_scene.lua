@@ -64,7 +64,7 @@ function GameScene:updateFighting(dt)
     for i, entity in ipairs(self.entities) do
         entity:update(dt, self.player)
     end
-    self:runCollisions()
+    self:runCollisionsBetweenEntities()
     self:removeDeadEnemies()
     self:sortEntityArray()
     self:checkGameOver()
@@ -190,10 +190,10 @@ function GameScene:sortEntityArray()
     table.sort(self.entities, function(a, b) return a.rect.y < b.rect.y end)
 end
 
-function GameScene:runCollisions()
+function GameScene:runCollisionsBetweenEntities()
     for i,entity in ipairs(self.entities) do
         if entity ~= self.player then
-            if self.player.rect:overlapping(entity.rect) then
+            if self.player.rect:overlapping(entity.rect) and entity.name ~= "yami ninja" then
                 if entity.name == "isonade" then
                     if entity.state ~= entity.states.following then
                         self.player:receiveDamage(entity)
