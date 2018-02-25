@@ -25,7 +25,8 @@ function MenuScene:draw()
 
     -- Title
     Text.printCentered("Ninja Rush", {255, 255, 255}, Screen.width/2, 40, 3)
-    Text.printCentered("a game by Gabriel Naves", {255, 255, 255}, Screen.width/2, 80, 1)
+    Text.printCentered("a game by Gabriel Naves,", {255, 255, 255}, Screen.width/2, 80, 1)
+    Text.printCentered("with music by Eber Filipe", {255, 255, 255}, Screen.width/2, 105, 1)
 
     -- Instructions
     Text.printCentered("Beat the bosses as quickly as you can!", {255, 255, 255}, Screen.width/2, Screen.height/2-70, 2)
