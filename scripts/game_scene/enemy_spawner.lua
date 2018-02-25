@@ -50,7 +50,7 @@ end
 EnemySpawner.bossSpawnFunctions = {
     nil,
     EnemySpawner.spawnGashadokuro,
-    EnemySpawner.spawnYamiNinja,
     EnemySpawner.spawnIsonade,
     EnemySpawner.spawnKamaitachi,
+    EnemySpawner.spawnYamiNinja,
 }

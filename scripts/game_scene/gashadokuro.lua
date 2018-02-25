@@ -11,17 +11,17 @@ function Gashadokuro.new(size)
     if size == "big" then
         t.image = StillImage.new("gashadokuro/gashadokuro_big.png", x, y, 0.5, 1)
         t.rect = Rectangle.new(x, y, 60, 40, 0.5, 1)
-        t.hp = love.math.random(6, 10)
+        t.hp = 8
         t.max_speed = Mathf.randomFloat(120, 220)
     elseif size == "medium" then
         t.image = StillImage.new("gashadokuro/gashadokuro_med.png", x, y, 0.5, 1)
         t.rect = Rectangle.new(x, y, 30, 20, 0.5, 1)
-        t.hp = love.math.random(4, 6)
+        t.hp = 4
         t.max_speed = Mathf.randomFloat(180, 280)
     else
         t.image = StillImage.new("gashadokuro/gashadokuro_small.png", x, y, 0.5, 1)
         t.rect = Rectangle.new(x, y, 15, 10, 0.5, 1)
-        t.hp = love.math.random(2, 4)
+        t.hp = 2
         t.max_speed = Mathf.randomFloat(240, 360)
     end
 
