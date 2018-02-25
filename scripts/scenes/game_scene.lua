@@ -31,6 +31,7 @@ function GameScene.new()
 end
 
 function GameScene:update(dt)
+    self.music_manager:update(dt)
     if not self.paused then
         self.time_since_level_load = self.time_since_level_load + dt
         self:updateFunction(dt)
@@ -141,10 +142,11 @@ function GameScene:shouldTransition()
 end
 
 function GameScene:startTransition()
-    self.map:startTransition()
+    self.map:startTransition(self.music_manager)
     self.state = GameScene.states.transitioning
     self.updateFunction = self.updateTransitioning
     self.drawFunction = self.drawTransitioning
+    self.music_manager:nextRoom()
 end
 
 function GameScene:endTransition()

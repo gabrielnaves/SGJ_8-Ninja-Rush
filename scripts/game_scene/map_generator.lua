@@ -28,11 +28,12 @@ function MapGenerator:canTransition()
     return not self.transitioning and self.current_room < MapGenerator.room_amount
 end
 
-function MapGenerator:startTransition()
+function MapGenerator:startTransition(music_manager)
     self.start_height = self.current_height
     self.end_height = self.start_height + self.room_distance
     self.transitioning = true
     self.transition_timer = 0
+    self.transition_time = music_manager.loop_time - music_manager.timer
     self.current_room = self.current_room + 1
 end
 
