@@ -33,7 +33,7 @@ function Isonade.new()
     t.blink_timer = 0
 
     -- Health
-    t.hp = 20
+    t.hp = 16
 
     return setmetatable(t, Isonade.mt)
 end
