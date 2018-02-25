@@ -51,8 +51,8 @@ end
 function StillAnimation:update(dt)
     if self.loop or not self.ended then
         self.frame_timer = self.frame_timer + dt
-        if self.frame_timer > self.frame_time then
-            self.frame_timer = 0
+        while self.frame_timer > self.frame_time do
+            self.frame_timer = self.frame_timer - self.frame_time
             if self.reversed then
                 self.current_frame = self.current_frame - 1
             else

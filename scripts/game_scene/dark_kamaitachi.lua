@@ -1,6 +1,7 @@
 DarkKamaitachi = {}
 DarkKamaitachi.mt = { __index=DarkKamaitachi }
 
+DarkKamaitachi.name = "dark kamaitachi"
 DarkKamaitachi.states = { idle="idle", attacking="attacking" }
 DarkKamaitachi.directions = { up=1, down=2, left=3, right=4 }
 

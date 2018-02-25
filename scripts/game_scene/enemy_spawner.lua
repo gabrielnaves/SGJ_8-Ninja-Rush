@@ -1,6 +1,7 @@
 require("scripts.game_scene.dark_kamaitachi")
 require("scripts.game_scene.light_kamaitachi")
 require("scripts.game_scene.gashadokuro")
+require("scripts.game_scene.isonade")
 
 EnemySpawner = {}
 
@@ -33,8 +34,15 @@ function EnemySpawner.spawnGashadokuroBoss(entityTable)
     table.insert(entityTable, boss)
 end
 
+function EnemySpawner.spawnIsonadeBoss(entityTable)
+    local boss = Isonade.new()
+    boss.rect.x, boss.rect.y = Screen.width/2, Screen.height/2
+    table.insert(entityTable, boss)
+end
+
 EnemySpawner.bossSpawnFunctions = {
     nil,
-    EnemySpawner.spawnKamaitachiBoss,
+    EnemySpawner.spawnIsonadeBoss,
     EnemySpawner.spawnGashadokuroBoss,
+    EnemySpawner.spawnKamaitachiBoss,
 }

@@ -72,8 +72,10 @@ end
 
 function GameScene:updateGameOver(dt)
     for i, entity in ipairs(self.entities) do
-        if entity.state == "idle" then
+        if entity.state == "idle" and entity.name ~= "isonade" then
             entity.current_anim[entity.direction]:update(dt)
+        elseif entity.state == "idle" and entity.name == "isonade" then
+            entity.idle_anim:update(dt)
         else
             entity:update(dt, self.player)
         end
@@ -192,7 +194,13 @@ function GameScene:runCollisions()
     for i,entity in ipairs(self.entities) do
         if entity ~= self.player then
             if self.player.rect:overlapping(entity.rect) then
-                self.player:receiveDamage(entity)
+                if entity.name == "isonade" then
+                    if entity.state ~= entity.states.following then
+                        self.player:receiveDamage(entity)
+                    end
+                else
+                    self.player:receiveDamage(entity)
+                end
             end
             if self.player.state == Player.states.attacking then
                 if self.player.direction == Player.directions.up then

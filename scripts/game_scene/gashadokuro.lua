@@ -1,6 +1,8 @@
 Gashadokuro = {}
 Gashadokuro.mt = { __index=Gashadokuro }
 
+Gashadokuro.name = "gashadokuro"
+
 function Gashadokuro.new(size)
     local t = {}
     local x, y = Screen.width/2, Screen.height/2

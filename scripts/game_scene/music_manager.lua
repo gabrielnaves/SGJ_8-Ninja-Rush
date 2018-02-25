@@ -74,7 +74,7 @@ end
 
 function MusicManager:updateTimer(dt)
     -- Hacky way of synchronizing the timer with the actual music time
-    if self.timer < self.loop_time / 2 then
+    if self.timer < 3 * self.loop_time / 4 then
         self.timer = self.tracks[1].src:tell()
     else
         self.timer = self.timer + dt
@@ -112,8 +112,26 @@ function MusicManager:stage3Music()
     end
 end
 
+function MusicManager:stage4Music()
+    if self.requested_change then
+        self.loop_count = 0
+    end
+    self.loop_count = self.loop_count + 1
+
+    local tracks_to_play = { 1, 2, 5, 6 }
+
+    if self.loop_count == 1 then table.insert(tracks_to_play, 7) end
+    if self.loop_count == 2 then table.insert(tracks_to_play, 8) end
+    if self.loop_count == 4 then self.loop_count = 0 end
+
+    for i=1,#tracks_to_play do
+        self.tracks[tracks_to_play[i]].src:setVolume(self.tracks[tracks_to_play[i]].vol)
+    end
+end
+
 MusicManager.onLoopEndFunctions = {
     MusicManager.stage1Music,
     MusicManager.stage2Music,
     MusicManager.stage3Music,
+    MusicManager.stage4Music,
 }

@@ -1,6 +1,7 @@
 LightKamaitachi = {}
 LightKamaitachi.mt = { __index=LightKamaitachi }
 
+LightKamaitachi.name = "light kamaitachi"
 LightKamaitachi.states = { idle="idle", vanishing="vanishing", attacking="attacking", appearing="appearing" }
 LightKamaitachi.directions = { up=1, down=2, left=3, right=4 }
 
