@@ -11,3 +11,9 @@ function Text.printCentered(text, color, x, y, scale)
     local draw_y = math.floor(y-Text.font:getHeight(text)/2 * scale)
     love.graphics.print({color, text}, draw_x, draw_y, 0, scale, scale)
 end
+
+function Text.print(text, color, x, y, scale, pivotX, pivotY)
+    local draw_x = math.floor(x-Text.font:getWidth(text)*pivotX * scale)
+    local draw_y = math.floor(y-Text.font:getHeight(text)*pivotY * scale)
+    love.graphics.print({color, text}, draw_x, draw_y, 0, scale, scale)
+end

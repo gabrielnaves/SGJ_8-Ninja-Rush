@@ -1,6 +1,7 @@
 Player = {}
 Player.mt = { __index=Player }
 
+Player.name = "player"
 Player.states = { idle='idle', moving='moving', dashing='dashing', attacking='attacking', dead='dead' }
 Player.directions = { up=1, down=2, left=3, right=4 }
 

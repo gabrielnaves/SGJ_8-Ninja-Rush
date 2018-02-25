@@ -1,6 +1,7 @@
 require("scripts.game_scene.player")
 require("scripts.game_scene.map_generator")
 require("scripts.game_scene.hp_bar")
+require("scripts.game_scene.boss_hp")
 require("scripts.game_scene.enemy_spawner")
 require("scripts.game_scene.music_manager")
 
@@ -99,10 +100,13 @@ end
 function GameScene:draw()
     self:drawFunction()
     HpBar.draw(self.player.hp)
+    BossHp.draw(self.entities)
     if self.paused then
         self.black_box:draw()
         Text.printCentered("paused: press p to resume", {255, 255, 255}, Screen.width/2, Screen.height/2, 1)
     end
+    Text.print("press esc to return to menu", {255, 255, 255}, 10, Screen.height-10, 1, 0, 1)
+    Text.print("press p to pause", {255, 255, 255}, Screen.width-10, Screen.height-10, 1, 1, 1)
 end
 
 function GameScene:drawClear()
